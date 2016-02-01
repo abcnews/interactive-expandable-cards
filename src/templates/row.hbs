@@ -1,9 +1,7 @@
 <div class="ExpandableCards">
     <div class="ExpandableCards-row"
         role="tablist"
-        {{#if isMobile}} aria-multiselectable="true"{{/if}}>
-        {{#each items}}
-        <a href="#ExpandableCards-content--{{../rowId}}-{{@index}}"
+        {{#if isMobile}} aria-multiselectable="true"{{/if}}>{{#each items}}<a href="#ExpandableCards-content--{{../rowId}}-{{@index}}"
             id="ExpandableCards-card--{{../rowId}}-{{@index}}"
             class="ExpandableCards-card{{#if className}} ExpandableCards-card--{{className}}{{/if}}"
             role="tab"
@@ -15,18 +13,14 @@
             <div class="ExpandableCards-image" role="presentation"><img src="{{image}}" alt="" /></div>
             <h3 class="ExpandableCards-title">{{title}}</h3>
             <div class="ExpandableCards-more" role="presentation"></div>
-        </a>
-        {{#if ../isMobile}}
-        <div id="ExpandableCards-content-{{../rowId}}-{{@index}}"
+        </a>{{#if ../isMobile}}<div id="ExpandableCards-content-{{../rowId}}-{{@index}}"
             class="ExpandableCards-content ExpandableCards-content--inline"
             role="tabpanel"
             aria-labelledby="ExpandableCards-card--{{../rowId}}-{{@index}}"
             aria-hidden="true"
             style="height: 0">
             <div tabindex="0"><article><div class="story richtext">{{{content}}}</div></article></div>
-        </div>
-        {{/if}}
-        {{/each}}
+        </div>{{/if}}{{/each}}
     </div>
     {{#unless isMobile}}
     {{#each items}}
