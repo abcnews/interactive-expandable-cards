@@ -43,7 +43,7 @@ function parseItemFromSection(sectionEl) {
 	}
 
 	if (item.titlePrefix) {
-		item.className = item.titlePrefix.toLowerCase().replace(SPACES, ' ');
+		item.className = item.titlePrefix.toLowerCase().replace(SPACES, '-');
 	}
 
 	return item;
