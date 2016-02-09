@@ -244,6 +244,14 @@ a.ExpandableCards-card .ExpandableCards-title {
     border: none;
 }
 
+.ExpandableCards-content img {
+    padding-left: 0;
+    padding-right: 0;
+    min-width: 100%;
+    max-width: 100%;
+    height: auto;
+}
+
 .ExpandableCards div.article p,
 .ExpandableCards div.article li {
     line-height: 1.6875;
