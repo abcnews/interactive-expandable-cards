@@ -12,7 +12,6 @@ var templates = require('./templates')(require('handlebars/runtime'));
 var TITLE_PREFIX_DELIMETER = ': ';
 var TITLE_PREFIX_REGEX = /^([^:]*)/;
 var TITLE_MINUS_PREFIX_REGEX = /:\s+(.*)/;
-var EMPTY_PARAGRAPHS_REGEX = /<p>\s<\/p>/g;
 var IMAGE_DIMENSIONS_SRC_SEGMENT_REGEX = /\d+x\d+-\d+x\d+/;
 var THREE_TWO_IMAGE_SRC_SEGMENT = '3x2-460x307';
 var SPACES = /\s/g;
@@ -34,7 +33,9 @@ function parseItemFromSection(sectionEl) {
 	item = {
 		title: $heading.text(),
 		image: $img.attr('src').replace(IMAGE_DIMENSIONS_SRC_SEGMENT_REGEX, THREE_TWO_IMAGE_SRC_SEGMENT),
-		content: $section.html().replace(EMPTY_PARAGRAPHS_REGEX, '')
+		$$content: $section.children().filter(function () {
+			return $(this).text() !== ' ';
+		})
 	};
 
 	if (item.title.indexOf(TITLE_PREFIX_DELIMETER) > -1) {
@@ -47,6 +48,12 @@ function parseItemFromSection(sectionEl) {
 	}
 
 	return item;
+}
+
+function triggerResizeEvent() {
+	setTimeout(function () {
+		window[(window.dispatchEvent != null) ? 'dispatchEvent' : 'fireEvent'](new Event('resize'));
+	}, 0);
 }
 
 function showMobileContent() {
@@ -68,6 +75,8 @@ function showMobileContent() {
 
 	$card.addClass('is-active').attr('aria-selected', 'true');
 	$content.css('height','auto').removeAttr('aria-hidden').show();
+
+	triggerResizeEvent();
 
 	return false;
 }
@@ -107,7 +116,7 @@ function showDesktopContent() {
 		}
 
 		$card.addClass('is-active').attr('aria-selected', 'true');
-		$content.slideDown(250).removeAttr('aria-hidden');
+		$content.removeAttr('aria-hidden').slideDown(250, triggerResizeEvent);
 	});
 
 	return false;
@@ -181,10 +190,12 @@ function init() {
 
 		// Parse sections in each row, and replace original content with interactive
 		rowsOfSectionEls.forEach(function (rowSectionEls, rowIndex) {
-			var $expandFeatureRow;
+			var items, $expandFeatureRow;
+
+			items = rowSectionEls.map(parseItemFromSection);
 
 			$expandFeatureRow = $(templates.row({
-				items: rowSectionEls.map(parseItemFromSection),
+				items: items,
 				isMobile: isMobile,
 				rowId: [teaserIndex, rowIndex].join('-')
 			}))
@@ -194,12 +205,14 @@ function init() {
 				$expandFeatureRow.addClass('is-chained');
 			}
 
+			$expandFeatureRow.find(ns('story')).each(function (index) {
+				$(this).append(items[index].$$content);
+			});
+
             rows.push($expandFeatureRow);
 		});
 
         $teaser.empty().append(rows);
-
-
     });
 
 }

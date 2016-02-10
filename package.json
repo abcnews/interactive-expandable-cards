@@ -19,8 +19,8 @@
     }
   ],
   "dependencies": {
-    "util-dewysiwyg": "git+ssh://git@stash.abc-dev.net.au:7999/news/util-dewysiwyg.git#3.0.0",
-    "util-news-selectors": "git+ssh://git@stash.abc-dev.net.au:7999/news/util-news-selectors.git#1.2.0"
+    "util-dewysiwyg": "git+ssh://git@stash.abc-dev.net.au:7999/news/util-dewysiwyg.git#3.1.0",
+    "util-news-selectors": "git+ssh://git@stash.abc-dev.net.au:7999/news/util-news-selectors.git#1.5.0"
   },
   "devDependencies": {
     "grunt": "~0.4.5",

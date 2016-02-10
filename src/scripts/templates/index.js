@@ -49,7 +49,7 @@ this["JST"]["row"] = Handlebars.template({"1":function(depth0,helpers,partials,d
     + this.escapeExpression(((helper = (helper = helpers.titlePrefix || (depth0 != null ? depth0.titlePrefix : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0,{"name":"titlePrefix","hash":{},"data":data}) : helper)))
     + "</div>\n";
 },"10":function(depth0,helpers,partials,data,blockParams,depths) {
-    var stack1, helper, alias1=this.lambda, alias2=this.escapeExpression, alias3=helpers.helperMissing, alias4="function";
+    var helper, alias1=this.lambda, alias2=this.escapeExpression, alias3=helpers.helperMissing, alias4="function";
 
   return "<div id=\"ExpandableCards-content-"
     + alias2(alias1((depths[1] != null ? depths[1].rowId : depths[1]), depth0))
@@ -59,15 +59,13 @@ this["JST"]["row"] = Handlebars.template({"1":function(depth0,helpers,partials,d
     + alias2(alias1((depths[1] != null ? depths[1].rowId : depths[1]), depth0))
     + "-"
     + alias2(((helper = (helper = helpers.index || (data && data.index)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(depth0,{"name":"index","hash":{},"data":data}) : helper)))
-    + "\"\n            aria-hidden=\"true\"\n            style=\"height: 0\">\n            <div tabindex=\"0\"><article><div class=\"story richtext\">"
-    + ((stack1 = ((helper = (helper = helpers.content || (depth0 != null ? depth0.content : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(depth0,{"name":"content","hash":{},"data":data}) : helper))) != null ? stack1 : "")
-    + "</div></article></div>\n        </div>";
+    + "\"\n            aria-hidden=\"true\"\n            style=\"height: 0\">\n            <div tabindex=\"0\"><article><div class=\"story richtext\"></div></article></div>\n        </div>";
 },"12":function(depth0,helpers,partials,data,blockParams,depths) {
     var stack1;
 
   return ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.items : depth0),{"name":"each","hash":{},"fn":this.program(13, data, 0, blockParams, depths),"inverse":this.noop,"data":data})) != null ? stack1 : "");
 },"13":function(depth0,helpers,partials,data,blockParams,depths) {
-    var stack1, helper, alias1=this.lambda, alias2=this.escapeExpression, alias3=helpers.helperMissing, alias4="function";
+    var helper, alias1=this.lambda, alias2=this.escapeExpression, alias3=helpers.helperMissing, alias4="function";
 
   return "    <div id=\"ExpandableCards-content--"
     + alias2(alias1((depths[1] != null ? depths[1].rowId : depths[1]), depth0))
@@ -77,9 +75,7 @@ this["JST"]["row"] = Handlebars.template({"1":function(depth0,helpers,partials,d
     + alias2(alias1((depths[1] != null ? depths[1].rowId : depths[1]), depth0))
     + "-"
     + alias2(((helper = (helper = helpers.index || (data && data.index)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(depth0,{"name":"index","hash":{},"data":data}) : helper)))
-    + "\"\n        aria-hidden=\"true\">\n        <div tabindex=\"0\"><div class=\"article section\">"
-    + ((stack1 = ((helper = (helper = helpers.content || (depth0 != null ? depth0.content : depth0)) != null ? helper : alias3),(typeof helper === alias4 ? helper.call(depth0,{"name":"content","hash":{},"data":data}) : helper))) != null ? stack1 : "")
-    + "</div></div>\n    </div>\n";
+    + "\"\n        aria-hidden=\"true\">\n        <div tabindex=\"0\"><div class=\"article section\"></div></div>\n    </div>\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data,blockParams,depths) {
     var stack1;
 

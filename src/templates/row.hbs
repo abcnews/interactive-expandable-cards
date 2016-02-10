@@ -19,7 +19,7 @@
             aria-labelledby="ExpandableCards-card--{{../rowId}}-{{@index}}"
             aria-hidden="true"
             style="height: 0">
-            <div tabindex="0"><article><div class="story richtext">{{{content}}}</div></article></div>
+            <div tabindex="0"><article><div class="story richtext"></div></article></div>
         </div>{{/if}}{{/each}}
     </div>
     {{#unless isMobile}}
@@ -29,7 +29,7 @@
         role="tabpanel"
         aria-labelledby="ExpandableCards-card--{{../rowId}}-{{@index}}"
         aria-hidden="true">
-        <div tabindex="0"><div class="article section">{{{content}}}</div></div>
+        <div tabindex="0"><div class="article section"></div></div>
     </div>
     {{/each}}
     {{/unless}}
