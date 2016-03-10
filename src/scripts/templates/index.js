@@ -7,7 +7,7 @@ this["JST"]["content"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"
 
   return "<div class=\"ExpandableCards-content\" id=\"ExpandableCards-content--"
     + this.escapeExpression(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0,{"name":"id","hash":{},"data":data}) : helper)))
-    + "\">\n    <div tabindex=\"0\"><div class=\"story richtext article section\"></div></div>\n</div>\n";
+    + "\">\n    <div class=\"story richtext article section\"></div>\n</div>\n";
 },"useData":true});
 
 this["JST"]["root"] = Handlebars.template({"1":function(depth0,helpers,partials,data,blockParams,depths) {
