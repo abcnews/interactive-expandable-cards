@@ -56,68 +56,62 @@ function triggerResizeEvent() {
 	}, 0);
 }
 
-function showMobileContent() {
-	var $row, $card, $content;
+function showContent(event) {
+	var $card, $body, $root, $rowEndCard, $activeCard, $content, contentHeight,
+		bodyScrollTop, cardTop, activeCardTop, isStandard, duration;
+
+	$content = event.data.$content;
+	contentHeight = $content.height();
 
 	$card = $(this);
-	$row = $card.closest('.ExpandableCards');
-	$content = $card.next();
+	cardTop = $card.offset().top;
 
-	// If this card is already active, close it.
+	$root = $card.closest('.ExpandableCards');
+	$rowEndCard = $('.ExpandableCards-card', $root).filter(function () {
+		return $(this).offset().top === cardTop;
+	}).last();
+	$activeCard = $('.ExpandableCards-card.is-active', $root).first();
+	activeCardTop = $activeCard.length ? $activeCard.offset().top : 0;
 
-	if ($card.hasClass('is-active')) {
-		$card.removeClass('is-active').removeAttr('aria-selected');
-		$content.attr('aria-hidden', 'true').css('height', 0);
-		return false;
-	}
+	$body = $('body');
+	bodyScrollTop = $body.scrollTop();
+	isStandard = $body.hasClass('platform-standard');
+	duration = isStandard ? 250 : 0;
 
-	// Otherwise open the card.
-
-	$card.addClass('is-active').attr('aria-selected', 'true');
-	$content.css('height','auto').removeAttr('aria-hidden').show();
-
-	triggerResizeEvent();
-
-	return false;
-}
-
-function showDesktopContent() {
-	var $row, $card, $activeCard, $content, $activeContent;
-
-	$card = $(this);
-	$row = $card.closest('.ExpandableCards');
-	$content = $row.find('[aria-labelledby="' + $card.attr('id') + '"]').last();
-
-	// If this card is already active, close it.
-
-	if ($card.hasClass('is-active')) {
-		$card.removeClass('is-active').removeAttr('aria-selected');
-		$content.attr('aria-hidden', 'true').slideUp(250);
-		return false;
-	}
-
-	// Otherwise close the active card if there is one
-	// (even if it's in another row) and open the card.
-
-	$activeCard = $row.parent().find('.ExpandableCards .is-active').first();
+	// Close any active card's related content
 
 	if ($activeCard.length) {
-		$activeCard.removeClass('is-active').removeAttr('aria-selected');
-		$activeContent = $activeCard.closest('.ExpandableCards').find('[aria-labelledby="' + $activeCard.attr('id') + '"]').last();
+		$activeCard.removeClass('is-active');
+		$content.slideUp(duration, function () {
+			$activeCard.data('item').$$content.detach();
+		});
 	}
 
-	($activeContent || $content)
-	.attr('aria-hidden', 'true')
-	.slideUp(250, function () {
-		var cardTop = $card.offset().top;
+	// If this card is already active, we're done.
 
-		if (cardTop < $(window).scrollTop()) {
-			$('html, body').animate({scrollTop: cardTop - 20}, 250);
+	if ($card.is($activeCard)) {
+		return false;
+	}
+
+	// If it wasn't, make it active and show its content
+
+	setTimeout(function () {
+
+		if (!isStandard && cardTop > activeCardTop) {
+			$body.scrollTop(bodyScrollTop - contentHeight);
+		} else if (isStandard && cardTop < bodyScrollTop) {
+			$body.animate({scrollTop: cardTop - 20}, duration);
 		}
 
-		$card.addClass('is-active').attr('aria-selected', 'true');
-		$content.removeAttr('aria-hidden').slideDown(250, triggerResizeEvent);
-	});
+		$content.find('.article').append($card.data('item').$$content);
+
+		$rowEndCard.after($content);
+
+		$card.addClass('is-active');
+
+		$content.slideDown(duration, triggerResizeEvent);
+
+	}, ($activeCard.length ? duration : 0) + 100);
 
 	return false;
 }
@@ -163,56 +157,36 @@ function init() {
     $$beacons.remove();
 
     $$teasers.each(function (teaserIndex) {
-        var $teaser, rows, sectionEls, rowsOfSectionEls;
+        var $teaser, sectionEls, items, $root, $content;
 
         // Fix the teaser content and normalise across platforms
         dewysiwyg.normalise(this);
 
         $teaser = $(this);
 
-        rows = [];
-
         // Wrap sections so they can be grouped and parsed
         sectionEls = wrapSections($teaser);
 
-        // Group sections into rows of 4
-		rowsOfSectionEls = sectionEls.reduce(function (rows, sectionEl, index) {
-			var rowIndex = Math.floor(index / 4);
+		items = sectionEls.map(parseItemFromSection);
 
-			if (rows.length === rowIndex) {
-				rows.push([]);
-			}
+		$content = $(templates.content({
+			id: teaserIndex
+		})).hide();
 
-			rows[rowIndex].push(sectionEl);
+		$root = $(templates.root({
+			id: teaserIndex,
+			items: items
+		}))
+		.on('click', '.ExpandableCards-card', {
+			$content: $content
+		}, showContent);
 
-			return rows;
-		}, []);
-
-		// Parse sections in each row, and replace original content with interactive
-		rowsOfSectionEls.forEach(function (rowSectionEls, rowIndex) {
-			var items, $expandFeatureRow;
-
-			items = rowSectionEls.map(parseItemFromSection);
-
-			$expandFeatureRow = $(templates.row({
-				items: items,
-				isMobile: isMobile,
-				rowId: [teaserIndex, rowIndex].join('-')
-			}))
-			.on('click', '.ExpandableCards-card', isMobile ? showMobileContent : showDesktopContent);
-
-			if (rowIndex < (rowsOfSectionEls.length - 1)) {
-				$expandFeatureRow.addClass('is-chained');
-			}
-
-			$expandFeatureRow.find(ns('story')).each(function (index) {
-				$(this).append(items[index].$$content);
-			});
-
-            rows.push($expandFeatureRow);
+		$root.find('.ExpandableCards-card')
+		.each(function (itemIndex) {
+			$(this).data('item', items[itemIndex]);
 		});
 
-        $teaser.empty().append(rows);
+        $teaser.empty().append($root);
     });
 
 }

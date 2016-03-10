@@ -1,0 +1,9 @@
+<div class="ExpandableCards" id="ExpandableCards--{{../id}}">
+    {{#each items}}<a href="#ExpandableCards-content--{{../id}}"
+        class="ExpandableCards-card{{#if className}} ExpandableCards-card--{{className}}{{/if}}">
+        {{#if titlePrefix}}<div class="ExpandableCards-titlePrefix">{{titlePrefix}}</div>{{/if}}
+        <div class="ExpandableCards-image" role="presentation"><img src="{{image}}" alt="" /></div>
+        <h3 class="ExpandableCards-title">{{title}}</h3>
+        <div class="ExpandableCards-more" role="presentation"></div>
+    </a>{{/each}}
+</div>
