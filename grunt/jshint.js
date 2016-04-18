@@ -7,6 +7,6 @@ module.exports = {
 		"src": ["Gruntfile.js","grunt/*.js"]
 	},
 	"js": {
-		"src": ["src/scripts/**/*.js", "!src/scripts/templates/index.js"]
+		"src": ["src/scripts/**/*.js"]
 	}
 };

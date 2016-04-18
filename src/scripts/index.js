@@ -7,8 +7,10 @@
 
 var dewysiwyg = require('util-dewysiwyg');
 var ns = require('util-news-selectors');
-var templates = require('./templates')(require('handlebars/runtime'));
-
+var templates = {
+	root: require('../templates/root.hbs'),
+	content: require('../templates/content.hbs')
+};
 var TITLE_PREFIX_DELIMETER = ': ';
 var TITLE_PREFIX_REGEX = /^([^:]*)/;
 var TITLE_MINUS_PREFIX_REGEX = /:\s+(.*)/;

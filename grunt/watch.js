@@ -11,7 +11,10 @@ module.exports = {
 		"interrupt": true
 	},
 	"js": {
-		"files": "src/scripts/**/*",
+		"files": [
+			"src/scripts/**/*",
+			"src/templates/**/*.hbs"
+		],
 		"tasks": [
 			"jshint:js",
 			"browserify:dev"
@@ -21,14 +24,6 @@ module.exports = {
 	"css": {
 		"files": "src/styles/**/*.scss",
 		"tasks": "sass:dev",
-		"interrupt": true
-	},
-	"templates": {
-		"options": {
-			"livereload": false
-		},
-		"files": "src/templates/**/*.hbs",
-		"tasks": "handlebars:compile",
 		"interrupt": true
 	},
 	"copy": {
