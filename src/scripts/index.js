@@ -47,6 +47,11 @@ function parseItemFromSection(sectionEl) {
 
 	if (item.titlePrefix) {
 		item.className = item.titlePrefix.toLowerCase().replace(SPACES, '-');
+
+		if (item.titlePrefix.length > 12) {
+			item.isTitlePrefixLong = true;
+		}
+
 	}
 
 	return item;
@@ -177,6 +182,7 @@ function init() {
 
 		$root = $(templates.root({
 			id: teaserIndex,
+			isTwoup: true, // TODO: Make optional?
 			items: items
 		}))
 		.on('click', '.ExpandableCards-card', {

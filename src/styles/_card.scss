@@ -1,12 +1,12 @@
 .ExpandableCards-card {
-    display: block;
+    display: inline-block;
     overflow: visible;
     position: relative;
     z-index: 1;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    margin: 0 0 44px 0;
+    margin: 0 5px 44px;
     border-radius: 3px;
     padding: 0 0 22px 0;
     width: auto;
@@ -24,13 +24,14 @@ a.ExpandableCards-card {
     text-decoration: none;
 }
 
-.platform-standard .ExpandableCards-card {
-    display: inline-block;
-    width: 220px;
+.platform-mobile .ExpandableCards--twoup .ExpandableCards-card {
+    width: 46.5%;
+    width: calc(50% - 10px);
 }
 
-.platform-standard .ExpandableCards > * {
-    margin-left: 20px;
+.platform-standard .ExpandableCards-card {
+    margin: 0 10px 44px;
+    width: 220px;
 }
 
 .ExpandableCards-card.is-active {
@@ -51,9 +52,21 @@ a.ExpandableCards-card {
     text-decoration: none;
 }
 
+.platform-mobile .ExpandableCards--twoup .ExpandableCards-titlePrefix {
+    padding: 5px 7.5px;
+}
+
+.platform-mobile .ExpandableCards--twoup .ExpandableCards-titlePrefix--long {
+    font-size: 13px;
+}
+
 .ExpandableCards-image {
     position: relative;
     margin: 10px 10px 0;
+}
+
+.platform-mobile .ExpandableCards--twoup .ExpandableCards-image {
+    margin: 7.5px 7.5px 0;
 }
 
 .ExpandableCards-image:first-child {
@@ -65,11 +78,9 @@ a.ExpandableCards-card {
     height: auto;
 }
 
-.ExpandableCards-title,
-div.article .ExpandableCards-title {
+div.ExpandableCards h3.ExpandableCards-title {
     text-align:center;
-    margin: 25px 10px 15px;
-    font-size: 1.5em;
+    margin: 15px 10px 10px;
     color: #333;
     font-size: 24px;
     font-weight: normal;
@@ -78,8 +89,11 @@ div.article .ExpandableCards-title {
     min-height: 64px;
 }
 
-.platorm-mobile .ExpandableCards-title {
-    min-height: 0;
+.platform-mobile div.ExpandableCards--twoup h3.ExpandableCards-title {
+    margin: 10px 7.5px 5px;
+    font-size: 18px;
+    line-height: 24px;
+    min-height: 48px;
 }
 
 .ExpandableCards-more {
