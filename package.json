@@ -1,6 +1,6 @@
 {
   "name": "interactive-expandable-cards",
-  "version": "2.3.1",
+  "version": "2.4.0",
   "description": "Groups of expandable \"winners and losers\"-style cards that can be embedded in stories.",
   "private": true,
   "repository": "ssh://git@stash.abc-dev.net.au:7999/news/interactive-expandable-cards.git",
