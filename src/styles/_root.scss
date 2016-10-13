@@ -1,13 +1,26 @@
 .ExpandableCards {
-    margin: 20px -15px 0;
-    -webkit-tap-highlight-color: rgba(0,0,0,0);
-    -moz-tap-highlight-color: rgba(0,0,0,0);
-    tap-highlight-color: rgba(0,0,0,0);
-    -webkit-touch-callout: none;
-    -moz-touch-callout: none;
-    touch-callout: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin: 20px -10px 0;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -moz-tap-highlight-color: rgba(0,0,0,0);
+  tap-highlight-color: rgba(0,0,0,0);
+  -webkit-touch-callout: none;
+  -moz-touch-callout: none;
+  touch-callout: none;
 }
-
-.platform-standard .ExpandableCards {
+.platform-mobile:not(.platform-standard) .ExpandableCards {
+  margin: 20px -15px 0;
+}
+@media (min-width: 700px) {
+  .platform-standard .ExpandableCards {
     margin: 20px -10px 0;
+  }
+  .platform-mobile:not(.platform-standard) .ExpandableCards {
+    margin: 20px -20px 0;
+  }
+}
+.platform-standard:not(.platform-mobile) .ExpandableCards {
+  margin: 20px -10px 0;
 }
