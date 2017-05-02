@@ -2,7 +2,7 @@
     {{#each items}}<a href="#ExpandableCards-story--{{../id}}"
         class="ExpandableCards-card{{#if className}} ExpandableCards-card--{{className}}{{/if}}">
         {{#if titlePrefix}}<div class="ExpandableCards-titlePrefix{{#if isTitlePrefixLong}} ExpandableCards-titlePrefix--long{{/if}}">{{titlePrefix}}</div>{{/if}}
-        <div class="ExpandableCards-image" role="presentation"><img src="{{image}}" alt="" /></div>
+        <div class="ExpandableCards-image" role="presentation">{{#if image}}<img src="{{image}}" alt="" />{{/if}}</div>
         <h3 class="ExpandableCards-title">{{title}}</h3>
         <div class="ExpandableCards-more" role="presentation"></div>
     </a>{{/each}}
