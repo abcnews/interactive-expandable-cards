@@ -20,10 +20,24 @@ const TITLE_MINUS_PREFIX_REGEX = /:\s+(.*)/;
 const IMAGE_DIMENSIONS_SRC_SEGMENT_REGEX = /\d+x\d+-\d+x\d+/;
 const THREE_TWO_IMAGE_SRC_SEGMENT = '3x2-460x307';
 const SPACES = /\s/g;
+const BEACON_NAME = 'interactive-expandable-cards';
+const STORY_SELECTOR = ns('story');
+const EMBED_WYSIWYG_SELECTOR = ns('embed:wysiwyg');
+const EMBED_WYSIWYG_CLASS_NAME = 'full' + EMBED_WYSIWYG_SELECTOR
+	.replace(/\./g, ' ')
+	.replace(/,/g, ' ')
+	.replace(/\s+/g, ' ');
 
 const parseItemFromSection = sectionEl => {
 	const $section = $(sectionEl);
 	const $heading = $section.children().first();
+
+	const title = $heading.text();
+
+	if (title.replace(' ', '').length === 0) {
+		return null;
+	}
+
 	let $img = $heading.next();
 
 	$heading.detach();
@@ -33,9 +47,11 @@ const parseItemFromSection = sectionEl => {
 		$img = $img.find('img');
 	}
 
+	const src = $img.is('img') ? $img.attr('src') : '';
+
 	const item = {
-		title: $heading.text(),
-		image: $img.attr('src').replace(IMAGE_DIMENSIONS_SRC_SEGMENT_REGEX, THREE_TWO_IMAGE_SRC_SEGMENT),
+		title: title,
+		image: src.replace(IMAGE_DIMENSIONS_SRC_SEGMENT_REGEX, THREE_TWO_IMAGE_SRC_SEGMENT),
 		$$children: $section.children().filter((index, el) => {
 			return $(el).text() !== ' ';
 		})
@@ -180,9 +196,35 @@ const wrapSections = $teaser => {
 	return sections;
 };
 
+const mockTeasers = () => {
+	$(`a[name^="cards"]`)
+	.each((index, startNode) => {
+		let nextNode = startNode;
+		let isMoreContent = true;
+		const betweenNodes = [];
+
+		while(isMoreContent && (nextNode = nextNode.nextSibling) !== null) {
+			if (nextNode.tagName && (nextNode.getAttribute('name') || '').indexOf('endcards') === 0) {
+				isMoreContent = false;
+			} else {
+				betweenNodes.push(nextNode);
+			}
+		}
+
+		$(`<div class="${EMBED_WYSIWYG_CLASS_NAME}"></div>`)
+		.append($(`<div data-beacon="${BEACON_NAME}"></div>`))
+		.append(betweenNodes)
+		.insertBefore(startNode);
+
+		$([startNode, nextNode]).remove();
+	});
+};
+
 const init = () => {
-  const $$beacons = $('[data-beacon="interactive-expandable-cards"]', $(ns('story')));
-  const $$teasers = $$beacons.closest(ns('embed:wysiwyg'));
+	mockTeasers();
+
+  const $$beacons = $(`[data-beacon="${BEACON_NAME}"]`, $(STORY_SELECTOR));
+  const $$teasers = $$beacons.closest(EMBED_WYSIWYG_SELECTOR);
 
 	$$beacons.remove();
 
@@ -191,7 +233,7 @@ const init = () => {
 
     const $teaser = $(el);
     const sectionEls = wrapSections($teaser);
-		const items = sectionEls.map(parseItemFromSection);
+		const items = sectionEls.map(parseItemFromSection).filter(x => x);
 		const $root = $(templates.root({id: index, items: items}));
 		const $$cards = $root.find('.ExpandableCards-card')
 		.each((index, el) => {
