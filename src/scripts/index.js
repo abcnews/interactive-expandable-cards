@@ -42,8 +42,6 @@ const MOCK_TEASER_INNER_CLASS_NAME = (
 	PLATFORM === 'p2' ? EMBED_WYSIWYG_SELECTOR.split(' ')[1] : ''
 ).replace(/\./g, ' ');
 
-console.log(EMBED_WYSIWYG_SELECTOR, MOCK_TEASER_OUTER_CLASS_NAME, MOCK_TEASER_INNER_CLASS_NAME);
-
 const parseItemFromSection = sectionEl => {
 	const $section = $(sectionEl);
 	const $heading = $section.children().first();
