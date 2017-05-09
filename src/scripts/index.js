@@ -19,14 +19,30 @@ const TITLE_PREFIX_REGEX = /^([^:]*)/;
 const TITLE_MINUS_PREFIX_REGEX = /:\s+(.*)/;
 const IMAGE_DIMENSIONS_SRC_SEGMENT_REGEX = /\d+x\d+-\d+x\d+/;
 const THREE_TWO_IMAGE_SRC_SEGMENT = '3x2-460x307';
+const P2_IMAGE_DIMENSIONS_SRC_SEGMENT_REGEX = /\d+x\d+-thumbnail/;
+const P2_THREE_TWO_IMAGE_SRC_SEGMENT = '3x2-large';
 const SPACES = /\s/g;
 const BEACON_NAME = 'interactive-expandable-cards';
+const $BODY = $('body');
+const PLATFORM = {
+	'-1': 'p1m',
+	0: 'p2',
+	1: 'p1s'
+}[
+	(+$BODY.is('.platform-standard')) -
+	(+$BODY.is('.platform-mobile'))
+];
 const STORY_SELECTOR = ns('story');
-const EMBED_WYSIWYG_SELECTOR = ns('embed:wysiwyg');
-const EMBED_WYSIWYG_CLASS_NAME = 'full' + EMBED_WYSIWYG_SELECTOR
-	.replace(/\./g, ' ')
-	.replace(/,/g, ' ')
-	.replace(/\s+/g, ' ');
+const EMBED_WYSIWYG_SELECTOR = ns('embed:wysiwyg', PLATFORM);
+const EMBED_FULL_CLASS_NAME = {p1s: 'full', p1m: '', p2: 'view-embed-full'}[PLATFORM];
+const MOCK_TEASER_OUTER_CLASS_NAME = (
+	EMBED_WYSIWYG_SELECTOR.split(' ')[0] + ' ' + EMBED_FULL_CLASS_NAME
+).replace(/\./g, ' ');
+const MOCK_TEASER_INNER_CLASS_NAME = (
+	PLATFORM === 'p2' ? EMBED_WYSIWYG_SELECTOR.split(' ')[1] : ''
+).replace(/\./g, ' ');
+
+console.log(EMBED_WYSIWYG_SELECTOR, MOCK_TEASER_OUTER_CLASS_NAME, MOCK_TEASER_INNER_CLASS_NAME);
 
 const parseItemFromSection = sectionEl => {
 	const $section = $(sectionEl);
@@ -51,7 +67,8 @@ const parseItemFromSection = sectionEl => {
 
 	const item = {
 		title: title,
-		image: src.replace(IMAGE_DIMENSIONS_SRC_SEGMENT_REGEX, THREE_TWO_IMAGE_SRC_SEGMENT),
+		image: src.replace(IMAGE_DIMENSIONS_SRC_SEGMENT_REGEX, THREE_TWO_IMAGE_SRC_SEGMENT)
+			.replace(P2_IMAGE_DIMENSIONS_SRC_SEGMENT_REGEX, P2_THREE_TWO_IMAGE_SRC_SEGMENT),
 		$$children: $section.children().filter((index, el) => {
 			return $(el).text() !== ' ';
 		})
@@ -211,10 +228,18 @@ const mockTeasers = () => {
 			}
 		}
 
-		$(`<div class="${EMBED_WYSIWYG_CLASS_NAME}"></div>`)
+		const $outer = $(`<div class="${MOCK_TEASER_OUTER_CLASS_NAME}"></div>`);
+		const $inner = MOCK_TEASER_OUTER_CLASS_NAME ? $(`<div class="${MOCK_TEASER_INNER_CLASS_NAME}"></div>`) : null;
+
+		($inner || $outer)
 		.append($(`<div data-beacon="${BEACON_NAME}"></div>`))
-		.append(betweenNodes)
-		.insertBefore(startNode);
+		.append(betweenNodes);
+
+		if ($inner) {
+			$outer.append($inner);
+		}
+
+		$outer.insertBefore(startNode);
 
 		$([startNode, nextNode]).remove();
 	});
