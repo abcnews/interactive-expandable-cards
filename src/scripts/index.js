@@ -227,7 +227,7 @@ const mockTeasers = () => {
 		}
 
 		const $outer = $(`<div class="${MOCK_TEASER_OUTER_CLASS_NAME}"></div>`);
-		const $inner = MOCK_TEASER_OUTER_CLASS_NAME ? $(`<div class="${MOCK_TEASER_INNER_CLASS_NAME}"></div>`) : null;
+		const $inner = MOCK_TEASER_INNER_CLASS_NAME ? $(`<div class="${MOCK_TEASER_INNER_CLASS_NAME}"></div>`) : null;
 
 		($inner || $outer)
 		.append($(`<div data-beacon="${BEACON_NAME}"></div>`))
