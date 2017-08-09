@@ -35,7 +35,8 @@
   width: 220px; // non-flexbox
 }
 
-a.ExpandableCards-card {
+.ExpandableCards > a.ExpandableCards-card:hover,
+.ExpandableCards > a.ExpandableCards-card:focus {
   text-decoration: none;
 }
 
@@ -51,7 +52,7 @@ a.ExpandableCards-card {
   background-color: #07528e;
   color: #fff;
   font-size: 16px;
-  font-family: sans-serif;
+  font-family: ABCSans, sans-serif;
   line-height: 19px;
   text-align:center;
   text-transform: uppercase;
@@ -91,10 +92,6 @@ a.ExpandableCards-card {
   margin: 10px 10px 0;
 }
 
-.ExpandableCards-image:first-child {
-  margin-top: 39px;
-}
-
 .ExpandableCards-image img {
   width: 100%;
   height: auto;
@@ -105,6 +102,7 @@ div.ExpandableCards h3.ExpandableCards-title {
   color: #333;
   font-size: 18px;
   line-height: 24px;
+  font-family: ABCSans, sans-serif;
   font-weight: normal;
   text-align: center;
 }

@@ -32,7 +32,7 @@ const PLATFORM = {
 	(+$BODY.is('.platform-standard')) -
 	(+$BODY.is('.platform-mobile'))
 ];
-const STORY_SELECTOR = ns('story');
+const STORY_SELECTOR = ns('story') + ', main.Main';
 const EMBED_WYSIWYG_SELECTOR = ns('embed:wysiwyg', PLATFORM);
 const EMBED_FULL_CLASS_NAME = {p1s: 'full', p1m: '', p2: 'view-embed-full'}[PLATFORM];
 const MOCK_TEASER_OUTER_CLASS_NAME = (
@@ -58,10 +58,14 @@ const parseItemFromSection = sectionEl => {
 	$img.detach();
 
 	if (!$img.is('img')) {
-		$img = $img.find('img');
+		$img = $img.find('img, picture > :last-child').first();
 	}
 
-	const src = $img.is('img') ? $img.attr('src') : '';
+	if (!$img.is('[src]')) {
+		$img = $img.prev();
+	}
+
+	const src = $img.attr('src') || $img.attr('srcset') || $img.attr('data-srcset') || '';
 
 	const item = {
 		title: title,
@@ -252,7 +256,9 @@ const init = () => {
 	$$beacons.remove();
 
   $$teasers.each((index, el) => {
-    dewysiwyg.normalise(el);
+		if (!window.__ODYSSEY__) {
+    	dewysiwyg.normalise(el);
+		}
 
     const $teaser = $(el);
     const sectionEls = wrapSections($teaser);
@@ -273,6 +279,16 @@ const init = () => {
 		$(window).on('resize', refs, reorderVisibleStory);
     $teaser.empty().append($root);
   });
+
+	function supportOdyssey() {
+		$$teasers.removeClass('u-richtext').addClass('u-pull');
+	}
+
+	if (window.__ODYSSEY__) {
+    supportOdyssey();
+	} else {
+		window.addEventListener('odyssey:api', supportOdyssey);
+	}
 
 };
 
