@@ -16,8 +16,8 @@
     padding-bottom: 2.5rem;
   }
 
-  // Phase 1 (Mobile)
-  :global(.embed-wysiwyg.richtext) > & {
+  // Phase 1 (Mobile) [except Odyssey]
+  :global(.embed-wysiwyg.richtext:not(.u-pull)) > & {
     margin: 0 -0.95rem;
   }
 

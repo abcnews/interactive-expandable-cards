@@ -62,7 +62,8 @@ class ExpandableCards extends Component {
 
   integrateWithOdyssey() {
     if (window.__ODYSSEY__) {
-      this.base.parentElement.removeClass('u-richtext').addClass('u-pull');
+      this.base.parentElement.classList.remove('u-richtext');
+      this.base.parentElement.classList.add('u-pull');
     } else {
       window.addEventListener('odyssey:api', this.integrateWithOdyssey);
     }
