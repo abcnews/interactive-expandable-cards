@@ -45,7 +45,7 @@ class ExpandableCards extends Component {
       itemsPerRow = 6;
     } else if (width >= 1200) {
       itemsPerRow = 5;
-    } else if (width >= 960) {
+    } else if (width >= 940) {
       itemsPerRow = 4;
     } else if (width >= 480) {
       itemsPerRow = 3;
