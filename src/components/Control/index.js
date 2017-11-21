@@ -2,9 +2,28 @@ const classNames = require('classnames/bind');
 const { h, Component } = require('preact');
 const styles = require('./styles.scss');
 
+const SCROLL_INTO_VIEW_OPTIONS = { behavior: 'smooth', block: 'center' };
+const TITLE_SCROLL_MARGIN = 48;
+
 class Control extends Component {
   constructor(props) {
     super(props);
+
+    this.getToggleElRef = this.getToggleElRef.bind(this);
+  }
+
+  getToggleElRef(el) {
+    this.toggleEl = el;
+  }
+
+  componentDidUpdate({ open: wasAlreadyOpen }) {
+    if (this.props.open && !wasAlreadyOpen) {
+      const { top, bottom } = this.toggleEl.getBoundingClientRect();
+
+      if (top < TITLE_SCROLL_MARGIN || bottom > window.innerHeight - TITLE_SCROLL_MARGIN) {
+        this.toggleEl.scrollIntoView(SCROLL_INTO_VIEW_OPTIONS);
+      }
+    }
   }
 
   render({ id, image, label, onToggle, open, order, regionId, siblingsHaveLabels, title }) {
@@ -31,7 +50,7 @@ class Control extends Component {
           </div>
         ) : null}
         <div class={styles.title}>{title}</div>
-        <div class={styles.toggle} role="presentation" />
+        <div ref={this.getToggleElRef} class={styles.toggle} role="presentation" />
       </button>
     );
   }
