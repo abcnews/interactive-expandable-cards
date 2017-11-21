@@ -4,6 +4,7 @@ const styles = require('./styles.scss');
 
 const SCROLL_INTO_VIEW_OPTIONS = { behavior: 'smooth', block: 'center', inline: 'end' };
 const TITLE_SCROLL_MARGIN = 48;
+const TITLE_CONTAINING_BRACES = /(.*)\((.*)\)(.*)?/;
 
 class Control extends Component {
   constructor(props) {
@@ -27,6 +28,9 @@ class Control extends Component {
   }
 
   render({ id, image, label, onToggle, open, order, regionId, siblingsHaveLabels, title }) {
+    const matches = title.match(TITLE_CONTAINING_BRACES);
+    const titleChildren = matches ? [matches[1], <span>{matches[2]}</span>, matches[3] || ''] : title;
+
     return (
       <button
         ref={this.getRootRef}
@@ -50,7 +54,7 @@ class Control extends Component {
             <img src={image} />
           </div>
         ) : null}
-        <div class={styles.title}>{title}</div>
+        <div class={styles.title}>{titleChildren}</div>
         <div ref={this.getToggleElRef} class={styles.toggle} role="presentation" />
       </button>
     );

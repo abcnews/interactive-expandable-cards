@@ -95,6 +95,16 @@ $circleShadow: 0 0.125rem 0.125rem rgba(0, 0, 0, 0.15);
       margin-top: 1.75rem !important;
     }
   }
+
+  & > span {
+    &::before {
+      content: '(';
+    }
+
+    &::after {
+      content: ')';
+    }
+  }
 }
 
 .toggle {
