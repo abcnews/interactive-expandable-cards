@@ -8,7 +8,7 @@ $circleShadow: 0 0.125rem 0.125rem rgba(0, 0, 0, 0.15);
   --label-fg: #fff;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: stretch;
   position: relative;
   z-index: 1;
@@ -30,7 +30,7 @@ $circleShadow: 0 0.125rem 0.125rem rgba(0, 0, 0, 0.15);
 }
 
 .label {
-  margin: -0.8125rem -0.8125rem auto -0.8125rem;
+  margin: -0.8125rem -0.8125rem 0 -0.8125rem;
   padding: 0.3125rem 0.5rem;
   border-top-left-radius: inherit;
   border-top-right-radius: inherit;
@@ -48,7 +48,7 @@ $circleShadow: 0 0.125rem 0.125rem rgba(0, 0, 0, 0.15);
 }
 
 .image {
-  margin: 0.75rem -0.25rem 0;
+  margin: 0.5rem -0.25rem 0;
 
   @media (min-width: 40rem) {
     margin: 0.75rem 0 0;
@@ -58,7 +58,11 @@ $circleShadow: 0 0.125rem 0.125rem rgba(0, 0, 0, 0.15);
     margin-top: 0;
 
     .siblingsHaveLabels > & {
-      margin-top: 1.75rem;
+      margin-top: 1.5rem;
+
+      @media (min-width: 40rem) {
+        margin-top: 1.75rem;
+      }
     }
   }
 
@@ -71,13 +75,15 @@ $circleShadow: 0 0.125rem 0.125rem rgba(0, 0, 0, 0.15);
 
 .title {
   // !important === ABC News CSS override
-  margin: 0.5rem -0.25rem 0 !important;
+  margin: auto -0.25rem !important;
+  padding-top: 0.5rem;
   font-size: 1.125rem !important;
   font-weight: normal !important;
   line-height: 1.5rem;
 
   @media (min-width: 40rem) {
-    margin: 0.75rem 0 0 !important;
+    margin: auto 0 !important;
+    padding-top: 0.75rem;
     font-size: 1.5rem !important;
     line-height: 2rem;
   }
