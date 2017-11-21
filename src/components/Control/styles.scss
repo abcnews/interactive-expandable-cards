@@ -4,8 +4,8 @@ $shadow: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.15);
 $circleShadow: 0 0.125rem 0.125rem rgba(0, 0, 0, 0.15);
 
 .root {
-  --card-label-bg: #07528e;
-  --card-label-fg: #fff;
+  --label-bg: #07528e;
+  --label-fg: #fff;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -34,9 +34,9 @@ $circleShadow: 0 0.125rem 0.125rem rgba(0, 0, 0, 0.15);
   border-top-left-radius: inherit;
   border-top-right-radius: inherit;
   background-color: #07528e;
-  background-color: var(--card-label-bg);
+  background-color: var(--label-bg);
   color: #fff;
-  color: var(--card-label-fg);
+  color: var(--label-fg);
   font-size: 1rem;
   line-height: 1.1875rem;
   text-transform: uppercase;

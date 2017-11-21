@@ -18,7 +18,10 @@ class Control extends Component {
         style={{ order }}
       >
         {label ? (
-          <div className={classNames(styles.label, { [styles.long]: label.length > 12 })} data-card-label={slug(label)}>
+          <div
+            className={classNames(styles.label, { [styles.long]: label.length > 12 })}
+            data-expandable-cards-label={slug(label)}
+          >
             {label}
           </div>
         ) : null}
