@@ -13,7 +13,7 @@ class Detail extends Component {
   }
 
   render() {
-    return <div className={`${styles.root} u-richtext`} />;
+    return <div className={`${styles.root} u-richtext`} data-component="Detail" />;
   }
 }
 

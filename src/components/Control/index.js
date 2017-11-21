@@ -35,6 +35,7 @@ class Control extends Component {
         className={classNames(styles.root, { [styles.open]: open, [styles.siblingsHaveLabels]: siblingsHaveLabels })}
         onClick={onToggle}
         style={{ order }}
+        data-component="Control"
       >
         {label ? (
           <div

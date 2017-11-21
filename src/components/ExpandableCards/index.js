@@ -99,7 +99,7 @@ class ExpandableCards extends Component {
     const atLeastOneItemHasLabel = items.some(x => x.label);
 
     return (
-      <dl role="presentation" className={styles.root}>
+      <dl role="presentation" className={styles.root} data-component="ExpandableCards">
         {items.reduce((memo, item, index) => {
           const controlId = `ExpandableCards_${id}__Control_${index}`;
           const regionId = `ExpandableCards_${id}__Region_${index}`;
