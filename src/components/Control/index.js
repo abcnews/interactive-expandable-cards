@@ -2,7 +2,7 @@ const classNames = require('classnames/bind');
 const { h, Component } = require('preact');
 const styles = require('./styles.scss');
 
-const SCROLL_INTO_VIEW_OPTIONS = { behavior: 'smooth', block: 'center' };
+const SCROLL_INTO_VIEW_OPTIONS = { behavior: 'smooth', block: 'center', inline: 'end' };
 const TITLE_SCROLL_MARGIN = 48;
 
 class Control extends Component {
