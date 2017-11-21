@@ -22,6 +22,7 @@ $circleShadow: 0 0.125rem 0.125rem rgba(0, 0, 0, 0.15);
   font-family: ABCSans, sans-serif;
   text-align: center;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 
   &:focus {
     outline: none;
