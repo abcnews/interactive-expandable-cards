@@ -3,8 +3,15 @@ $border: 0.0625rem solid $border-color;
 $shadow: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.15);
 $circleShadow: 0 0.125rem 0.125rem rgba(0, 0, 0, 0.15);
 
+// We want to use flexbox here so that the auto vertical margin on titles
+// effectively centers them in rows of cards with variable #s of lines,
+// however, a bug in IE's flexbox implementation  means that the cards'
+// height is stretched to the natural height of its thumbnail image.
+// To work around this, we only declare display: flex on all other
+// browsers, using selector hacks (see below).
 .root {
-  display: flex;
+  overflow: visible;
+  /* display: flex; */
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
@@ -25,6 +32,17 @@ $circleShadow: 0 0.125rem 0.125rem rgba(0, 0, 0, 0.15);
   &:focus {
     outline: none;
   }
+}
+// Use flexbox on Chrome, Edge, Opera & Safari
+@supports (-webkit-appearance: none) {
+  .root {
+    display: flex;
+  }
+}
+// Use flexbox on Firefox
+body:last-child .root,
+x:-moz-any-link {
+  display: flex;
 }
 
 .label {
