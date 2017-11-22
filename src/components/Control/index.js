@@ -36,6 +36,7 @@ class Control extends Component {
         ref={this.getRootRef}
         id={id}
         aria-controls={regionId}
+        aria-expanded={open ? 'true' : 'false'}
         className={classNames(styles.root, { [styles.open]: open, [styles.siblingsHaveLabels]: siblingsHaveLabels })}
         onClick={onToggle}
         style={{ order }}
