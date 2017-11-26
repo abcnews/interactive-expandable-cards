@@ -131,7 +131,7 @@ class ExpandableCards extends Component {
                 springConfig={SPRING_CONFIG}
                 theme={{ collapse: styles.collapse, content: styles.content }}
               >
-                <Detail nodes={item.detail} />
+                <Detail nodes={item.detail} open={index === openIndex} />
               </Collapse>
             </dd>
           ]);
