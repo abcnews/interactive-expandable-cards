@@ -19,11 +19,14 @@ class Control extends Component {
 
   componentDidUpdate({ open: wasAlreadyOpen }) {
     if (this.props.open && !wasAlreadyOpen) {
-      const { top, bottom } = this.toggleEl.getBoundingClientRect();
+      setTimeout(() => {
+        const { top, bottom } = this.toggleEl.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
 
-      if (top < TITLE_SCROLL_MARGIN || bottom > window.innerHeight - TITLE_SCROLL_MARGIN) {
-        this.toggleEl.scrollIntoView(SCROLL_INTO_VIEW_OPTIONS);
-      }
+        if (top < TITLE_SCROLL_MARGIN || bottom > windowHeight - TITLE_SCROLL_MARGIN) {
+          this.toggleEl.scrollIntoView(SCROLL_INTO_VIEW_OPTIONS);
+        }
+      }, 250);
     }
   }
 
