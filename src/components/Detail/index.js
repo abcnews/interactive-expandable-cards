@@ -1,3 +1,4 @@
+const classNames = require('classnames');
 const { h, Component } = require('preact');
 const styles = require('./styles.scss');
 
@@ -8,6 +9,11 @@ class Detail extends Component {
     super(props);
 
     this.toggleTabbable = this.toggleTabbable.bind(this);
+    this.getContentRef = this.getContentRef.bind(this);
+  }
+
+  getContentRef(el) {
+    this.content = el;
   }
 
   toggleTabbable() {
@@ -25,11 +31,13 @@ class Detail extends Component {
   }
 
   componentDidMount() {
+    this.base.style.height = this.props.open ? `${this.content.clientHeight}px` : null;
+
     this.props.nodes.forEach(node => {
-      this.base.appendChild(node);
+      this.content.appendChild(node);
     });
 
-    this.tabbable = [...this.base.querySelectorAll(TABBABLE_SELECTOR)].map(el => ({
+    this.tabbable = [...this.content.querySelectorAll(TABBABLE_SELECTOR)].map(el => ({
       el,
       initial: el.getAttribute('tabindex')
     }));
@@ -42,7 +50,15 @@ class Detail extends Component {
   }
 
   render() {
-    return <div className={`${styles.root} u-richtext`} data-component="Detail" />;
+    return (
+      <div
+        className={classNames(styles.root, { [styles.open]: this.props.open })}
+        style={{ height: this.content && this.props.open ? `${this.content.clientHeight}px` : null }}
+        data-component="Detail"
+      >
+        <div ref={this.getContentRef} className={`${styles.content} u-richtext`} />
+      </div>
+    );
   }
 }
 

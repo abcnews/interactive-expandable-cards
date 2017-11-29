@@ -1,12 +1,10 @@
 const classNames = require('classnames');
 const { h, Component } = require('preact');
-const { Collapse } = require('react-collapse');
 const Control = require('../Control');
 const Detail = require('../Detail');
 const styles = require('./styles.scss');
 
 const INITIAL_ITEMS_PER_ROW = 2;
-const SPRING_CONFIG = { stiffness: 330, damping: 30 };
 
 let nextId = 0;
 
@@ -126,13 +124,7 @@ class ExpandableCards extends Component {
               aria-labelledby={controlId}
               style={{ order: order + itemsPerRow }}
             >
-              <Collapse
-                isOpened={index === openIndex}
-                springConfig={SPRING_CONFIG}
-                theme={{ collapse: styles.collapse, content: styles.content }}
-              >
-                <Detail nodes={item.detail} open={index === openIndex} />
-              </Collapse>
+              <Detail nodes={item.detail} open={index === openIndex} />
             </dd>
           ]);
         }, [])}
