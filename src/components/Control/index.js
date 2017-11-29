@@ -1,4 +1,4 @@
-const classNames = require('classnames/bind');
+const classNames = require('classnames');
 const { h, Component } = require('preact');
 const styles = require('./styles.scss');
 
