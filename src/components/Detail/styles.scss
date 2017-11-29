@@ -1,7 +1,6 @@
 .root {
-  margin: 0 0.625rem;
-  height: 0;
   overflow: hidden;
+  margin: 0 0.625rem;
 
   @media (min-width: 40rem) {
     opacity: 0;

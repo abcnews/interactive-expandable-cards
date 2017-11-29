@@ -16,6 +16,13 @@ class Detail extends Component {
     this.content = el;
   }
 
+  animateHeightChange() {
+    this.base.style.height = `${this.content.clientHeight}px`;
+    setTimeout(() => {
+      this.base.style.height = this.props.open ? 'auto' : '0';
+    }, this.props.open ? 250 : 0);
+  }
+
   toggleTabbable() {
     this.tabbable.forEach(x => {
       if (this.props.open) {
@@ -31,8 +38,6 @@ class Detail extends Component {
   }
 
   componentDidMount() {
-    this.base.style.height = this.props.open ? `${this.content.clientHeight}px` : null;
-
     this.props.nodes.forEach(node => {
       this.content.appendChild(node);
     });
@@ -42,20 +47,18 @@ class Detail extends Component {
       initial: el.getAttribute('tabindex')
     }));
 
+    this.animateHeightChange();
     this.toggleTabbable();
   }
 
   componentDidUpdate() {
+    this.animateHeightChange();
     this.toggleTabbable();
   }
 
   render() {
     return (
-      <div
-        className={classNames(styles.root, { [styles.open]: this.props.open })}
-        style={{ height: this.content && this.props.open ? `${this.content.clientHeight}px` : null }}
-        data-component="Detail"
-      >
+      <div className={classNames(styles.root, { [styles.open]: this.props.open })} data-component="Detail">
         <div ref={this.getContentRef} className={`${styles.content} u-richtext`} />
       </div>
     );
