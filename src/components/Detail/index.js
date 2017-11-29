@@ -51,7 +51,11 @@ class Detail extends Component {
     this.toggleTabbable();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate({ open: wasPreviouslyOpen }) {
+    if (wasPreviouslyOpen === this.props.open) {
+      return;
+    }
+
     this.animateHeightChange();
     this.toggleTabbable();
   }
