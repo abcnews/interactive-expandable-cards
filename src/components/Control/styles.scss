@@ -1,3 +1,4 @@
+$bg: #fff;
 $border-color: #d9d9d9;
 $border: 0.0625rem solid $border-color;
 $shadow: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.15);
@@ -22,9 +23,9 @@ $circleShadow: 0 0.125rem 0.125rem rgba(0, 0, 0, 0.15);
   border-radius: 0.125rem;
   padding: 0.75rem 0.75rem 1.75rem;
   height: 100%;
-  background-color: #fff;
+  background-color: $bg;
   box-shadow: $shadow;
-  color: inherit;
+  color: #333;
   font-family: ABCSans, sans-serif;
   text-align: center;
   cursor: pointer;
@@ -132,7 +133,7 @@ x:-moz-any-link {
   border: $border;
   border-top-width: 0;
   height: 1.5625rem;
-  background-color: #fff;
+  background-color: $bg;
   transition: background-color 0.125s, bottom 0.25s;
 
   &::before,
@@ -155,7 +156,7 @@ x:-moz-any-link {
   }
 
   &::after {
-    background-color: #fff;
+    background-color: $bg;
     background-image: url(./open.svg);
     background-position: center;
     background-repeat: no-repeat;
