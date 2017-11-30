@@ -15,8 +15,7 @@ class ExpandableCards extends Component {
     this.state = {
       id: nextId++,
       itemsPerRow: INITIAL_ITEMS_PER_ROW,
-      openIndex: null,
-      closingIndex: null
+      openIndex: null
     };
 
     this.integrateWithOdyssey = this.integrateWithOdyssey.bind(this);
@@ -73,6 +72,37 @@ class ExpandableCards extends Component {
     }
   }
 
+  onNavigate(index, event) {
+    let nextIndex = index;
+
+    switch (event.keyCode) {
+      case 37:
+        nextIndex--;
+        break;
+      case 38:
+        nextIndex -= this.state.itemsPerRow;
+        break;
+      case 39:
+        nextIndex++;
+        break;
+      case 40:
+        nextIndex += this.state.itemsPerRow;
+        break;
+      default:
+        nextIndex = -1;
+        break;
+    }
+
+    if (nextIndex > -1 && nextIndex < this.props.items.length) {
+      event.preventDefault();
+      [...this.base.querySelectorAll('[data-component="Control"]')].forEach((el, index) => {
+        if (index === nextIndex) {
+          el.focus();
+        }
+      });
+    }
+  }
+
   onToggle(index) {
     if (this.isIgnoringToggles) {
       return;
@@ -93,7 +123,7 @@ class ExpandableCards extends Component {
     }, 250);
   }
 
-  render({ items }, { id, itemsPerRow, openIndex, closingIndex }) {
+  render({ items }, { id, itemsPerRow, openIndex }) {
     const atLeastOneItemHasLabel = items.some(x => x.label);
 
     return (
@@ -109,6 +139,7 @@ class ExpandableCards extends Component {
                 id={controlId}
                 label={item.label}
                 image={item.image}
+                onNavigate={this.onNavigate.bind(this, index)}
                 onToggle={this.onToggle.bind(this, index)}
                 open={index === openIndex}
                 regionId={regionId}

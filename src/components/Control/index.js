@@ -30,7 +30,7 @@ class Control extends Component {
     }
   }
 
-  render({ id, image, label, onToggle, open, order, regionId, siblingsHaveLabels, title }) {
+  render({ id, image, label, onNavigate, onToggle, open, order, regionId, siblingsHaveLabels, title }) {
     const matches = title.match(TITLE_CONTAINING_BRACES);
     const titleChildren = matches ? [matches[1], <span>{matches[2]}</span>, matches[3] || ''] : title;
 
@@ -42,6 +42,7 @@ class Control extends Component {
         aria-expanded={open ? 'true' : 'false'}
         className={classNames(styles.root, { [styles.open]: open, [styles.siblingsHaveLabels]: siblingsHaveLabels })}
         onClick={onToggle}
+        onKeyDown={onNavigate}
         style={{ order }}
         data-component="Control"
       >
