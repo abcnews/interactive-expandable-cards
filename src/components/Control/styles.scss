@@ -1,8 +1,11 @@
 $bg: #fff;
-$border-color: #d9d9d9;
-$border: 0.0625rem solid $border-color;
-$shadow: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.15);
-$circleShadow: 0 0.125rem 0.125rem rgba(0, 0, 0, 0.15);
+$bgActive: #d9d9d9;
+$shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.12), 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.24);
+$tabShadow: 0 0.125rem 0.1875rem rgba(0, 0, 0, 0.12), 0 0.125rem 0.125rem rgba(0, 0, 0, 0.24);
+$shadowActive: 0 0.625rem 1.25rem rgba(0, 0, 0, 0.19), 0 0.375rem 0.375rem rgba(0, 0, 0, 0.23);
+$tabShadowActive: 0 0.6875rem 1.25rem rgba(0, 0, 0, 0.19), 0 0.4375rem 0.375rem rgba(0, 0, 0, 0.23);
+$transitionShadow: box-shadow 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+$radius: 0.125rem;
 
 // We want to use flexbox here so that the auto vertical margin on titles
 // effectively centers them in rows of cards with variable #s of lines,
@@ -19,8 +22,8 @@ $circleShadow: 0 0.125rem 0.125rem rgba(0, 0, 0, 0.15);
   position: relative;
   z-index: 1;
   margin: 0 0 2rem;
-  border: $border;
-  border-radius: 0.125rem;
+  border: 0;
+  border-radius: $radius;
   padding: 0.75rem 0.75rem 1.75rem;
   height: 100%;
   background-color: $bg;
@@ -30,9 +33,15 @@ $circleShadow: 0 0.125rem 0.125rem rgba(0, 0, 0, 0.15);
   text-align: center;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  transition: $transitionShadow;
 
   &:focus {
     outline: none;
+    box-shadow: $shadowActive;
+  }
+
+  &.open {
+    border-radius: $radius $radius 0 0;
   }
 }
 // Use flexbox on Chrome, Edge, Opera & Safari
@@ -49,10 +58,9 @@ x:-moz-any-link {
 
 .label {
   position: relative;
-  margin: -0.8125rem -0.8125rem 0 -0.8125rem;
+  margin: -0.75rem -0.75rem 0 -0.75rem;
   padding: 0.3125rem 0.5rem;
-  border-top-left-radius: inherit;
-  border-top-right-radius: inherit;
+  border-radius: $radius $radius 0 0;
   background-color: #07528e;
   color: #fff;
   font-size: 1rem;
@@ -126,16 +134,14 @@ x:-moz-any-link {
 
 .toggle {
   position: absolute;
-  left: -0.0625rem;
-  right: -0.0625rem;
-  bottom: -0.0625rem;
-  border-bottom-left-radius: inherit;
-  border-bottom-right-radius: inherit;
-  border: $border;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 0 0 $radius $radius;
   border-top-width: 0;
-  height: 1.5625rem;
+  height: 1.5rem;
   background-color: $bg;
-  transition: background-color 0.125s, bottom 0.25s;
+  transition: background-color 0.125s, bottom 0.25s, $transitionShadow;
 
   &::before,
   &::after {
@@ -144,8 +150,7 @@ x:-moz-any-link {
     position: absolute;
     bottom: -0.75rem;
     left: 50%;
-    border-bottom-left-radius: 50%;
-    border-bottom-right-radius: 50%;
+    border-radius: 50%;
     margin-left: -1.125rem;
     width: 2.25rem;
     height: 2.25rem;
@@ -153,7 +158,11 @@ x:-moz-any-link {
 
   &::before {
     z-index: -1;
-    box-shadow: 0 0.125rem 0.125rem rgba(0, 0, 0, 0.15);
+    box-shadow: $tabShadow;
+
+    .root:focus & {
+      box-shadow: $tabShadowActive;
+    }
   }
 
   &::after {
@@ -163,30 +172,30 @@ x:-moz-any-link {
     background-repeat: no-repeat;
     background-size: 1.5rem;
     transition: background-color 0.125s, background-image 0.25s;
-
-    .root:not(.open):focus & {
-      background-image: url(./open-hint.svg);
-    }
   }
 
   .open & {
-    bottom: -1.5625rem;
-    background-color: $border-color;
+    bottom: -1.5rem;
+    background-color: $bgActive;
     box-shadow: $shadow;
-    transition: background-color 0.25s, bottom 0.25s;
+    transition: background-color 0.25s, bottom 0.25s, $transitionShadow;
 
     &::before {
-      box-shadow: $circleShadow;
+      box-shadow: $tabShadow;
     }
 
     &::after {
-      background-color: $border-color;
+      background-color: $bgActive;
       background-image: url(./close.svg);
       transition: background-color 0.25s, background-image 0.25s;
     }
   }
 
-  .open:focus &::after {
-    background-image: url(./close-hint.svg);
+  .open:focus & {
+    box-shadow: $shadowActive;
+
+    &::before {
+      box-shadow: $tabShadowActive;
+    }
   }
 }
