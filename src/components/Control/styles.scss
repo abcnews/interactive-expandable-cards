@@ -164,8 +164,7 @@ x:-moz-any-link {
     background-size: 1.5rem;
     transition: background-color 0.125s, background-image 0.25s;
 
-    .root:not(.open):focus &,
-    .root:not(.open):hover & {
+    .root:not(.open):focus & {
       background-image: url(./open-hint.svg);
     }
   }
@@ -187,8 +186,7 @@ x:-moz-any-link {
     }
   }
 
-  .open:focus &::after,
-  .open:hover &::after {
+  .open:focus &::after {
     background-image: url(./close-hint.svg);
   }
 }
