@@ -134,7 +134,13 @@ class ExpandableCards extends Component {
           const order = 1 + index % itemsPerRow + Math.floor(index / itemsPerRow) * itemsPerRow * 2;
 
           return memo.concat([
-            <dt key={controlId} role="heading" aria-level="3" className={styles[`of${itemsPerRow}`]} style={{ order }}>
+            <dt
+              key={controlId}
+              role="heading"
+              aria-level="3"
+              className={styles[`of${itemsPerRow}`]}
+              style={`order:${order};-webkit-order:${order}`}
+            >
               <Control
                 id={controlId}
                 label={item.label}
@@ -153,7 +159,7 @@ class ExpandableCards extends Component {
               role="region"
               aria-hidden={index === openIndex ? 'false' : 'true'}
               aria-labelledby={controlId}
-              style={{ order: order + itemsPerRow }}
+              style={`order:${order + itemsPerRow};-webkit-order:${order + itemsPerRow}`}
             >
               <Detail nodes={item.detail} open={index === openIndex} />
             </dd>
