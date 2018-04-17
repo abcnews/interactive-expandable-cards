@@ -15,12 +15,51 @@ class ExpandableCards extends Component {
     this.state = {
       id: nextId++,
       itemsPerRow: INITIAL_ITEMS_PER_ROW,
-      openIndex: null
+      openIndex: null,
+      opened: [],
+      logged: false
     };
 
     this.integrateWithOdyssey = this.integrateWithOdyssey.bind(this);
     this.integrateWithPhase1Mobile = this.integrateWithPhase1Mobile.bind(this);
     this.measureBase = this.measureBase.bind(this);
+    this.sendLog = this.sendLog.bind(this);
+  }
+
+  sendLog() {
+    if (this.state.logged || typeof navigator.sendBeacon === 'undefined') {
+      return;
+    }
+    this.setState({logged: true});
+    var now = new Date();
+    var openedUnique = new Set(this.state.opened);
+    var requestedAtTimestamp = new Date(window.performance.timing.navigationStart).toISOString();
+    var firestoreURL = `https://firestore.googleapis.com/v1beta1/projects/interactive-expandable-cards/databases/(default)/documents/view/?documentId=${requestedAtTimestamp}_${Math.random()}`;
+    var firestoreData = {
+      fields: {
+        cmid: { integerValue: parseInt(document.URL.match(/\d{5,}/)[0], 10) },
+        url: { stringValue: document.URL },
+        requestedAt: { timestampValue: requestedAtTimestamp },
+        timeToLoad: { doubleValue: (window.performance.timing.domComplete - window.performance.timing.navigationStart) / 1000 },
+        timeOnPage: { doubleValue: (now.getTime() - window.performance.timing.domComplete) / 1000 },
+        itemsTotal: { integerValue: this.props.items.length },
+        itemsPerRow: { integerValue: this.state.itemsPerRow },
+        itemsOpened: { integerValue: this.state.opened.length },
+        itemsOpenedUnique: { integerValue: openedUnique.size },
+        itemsOpenedPct: { doubleValue: openedUnique.size / this.props.items.length * 100 },
+        itemsOpenedArray: {
+          arrayValue: {
+            values: this.state.opened.map( x => ({ integerValue: x }) )
+          }
+        },
+        itemsOpenedArrayUnique: {
+          arrayValue: {
+            values: [...openedUnique].map( x => ({ integerValue: x }) )
+          }
+        }
+      }
+    };
+    navigator.sendBeacon(firestoreURL, JSON.stringify(firestoreData));
   }
 
   componentDidMount() {
@@ -28,6 +67,8 @@ class ExpandableCards extends Component {
     this.integrateWithPhase1Mobile();
     this.measureBase();
     this.measurementInterval = setInterval(this.measureBase, 250);
+    window.addEventListener('beforeunload', this.sendLog);
+    window.addEventListener('unload', this.sendLog);
   }
 
   componentWillUnmount() {
@@ -111,7 +152,7 @@ class ExpandableCards extends Component {
     if (this.state.openIndex === index) {
       return this.setState({ openIndex: null });
     } else if (this.state.openIndex === null) {
-      return this.setState({ openIndex: index });
+      return this.setState({ openIndex: index, opened: this.state.opened.concat([index]) });
     }
 
     this.isIgnoringToggles = true;
@@ -119,7 +160,7 @@ class ExpandableCards extends Component {
 
     setTimeout(() => {
       this.isIgnoringToggles = false;
-      this.setState({ openIndex: index });
+      this.setState({ openIndex: index, opened: this.state.opened.concat([index]) });
     }, 250);
   }
 
