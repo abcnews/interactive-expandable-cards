@@ -74,6 +74,9 @@ class ExpandableCards extends Component {
 
   componentWillUnmount() {
     clearInterval(this.measurementInterval);
+    window.removeEventListener('beforeunload', this.sendLog);
+    window.removeEventListener('unload', this.sendLog);
+    this.sendLog();
   }
 
   measureBase() {
