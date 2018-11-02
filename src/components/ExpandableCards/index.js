@@ -1,4 +1,3 @@
-const classNames = require('classnames');
 const { h, Component } = require('preact');
 const Control = require('../Control');
 const Detail = require('../Detail');
@@ -41,21 +40,23 @@ class ExpandableCards extends Component {
         cmid: { integerValue: idMatches ? parseInt(idMatches[0], 10) : 0 },
         url: { stringValue: document.URL },
         requestedAt: { timestampValue: new Date(window.performance.timing.navigationStart).toISOString() },
-        timeToLoad: { doubleValue: (window.performance.timing.domComplete - window.performance.timing.navigationStart) / 1000 },
+        timeToLoad: {
+          doubleValue: (window.performance.timing.domComplete - window.performance.timing.navigationStart) / 1000
+        },
         timeOnPage: { doubleValue: (now.getTime() - window.performance.timing.domComplete) / 1000 },
         itemsTotal: { integerValue: this.props.items.length },
         itemsPerRow: { integerValue: this.state.itemsPerRow },
         itemsOpened: { integerValue: this.itemsOpened.length },
         itemsOpenedUnique: { integerValue: openedUnique.size },
-        itemsOpenedPct: { doubleValue: openedUnique.size / this.props.items.length * 100 },
+        itemsOpenedPct: { doubleValue: (openedUnique.size / this.props.items.length) * 100 },
         itemsOpenedArray: {
           arrayValue: {
-            values: this.itemsOpened.map( x => ({ integerValue: x }) )
+            values: this.itemsOpened.map(x => ({ integerValue: x }))
           }
         },
         itemsOpenedArrayUnique: {
           arrayValue: {
-            values: [...openedUnique].map( x => ({ integerValue: x }) )
+            values: [...openedUnique].map(x => ({ integerValue: x }))
           }
         }
       }
@@ -178,7 +179,7 @@ class ExpandableCards extends Component {
         {items.reduce((memo, item, index) => {
           const controlId = `ExpandableCards_${id}__Control_${index}`;
           const regionId = `ExpandableCards_${id}__Region_${index}`;
-          const order = 1 + index % itemsPerRow + Math.floor(index / itemsPerRow) * itemsPerRow * 2;
+          const order = 1 + (index % itemsPerRow) + Math.floor(index / itemsPerRow) * itemsPerRow * 2;
 
           return memo.concat([
             <dt

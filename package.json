@@ -7,7 +7,8 @@
   "contributors": [
     "Colin Gourlay <gourlay.colin@abc.net.au>",
     "Ash Kyd <kyd.ashley@abc.net.au>",
-    "Simon Elvery <elvery.simon@abc.net.au>"
+    "Simon Elvery <elvery.simon@abc.net.au>",
+    "Andrew Kesper <kesper.andrew@abc.net.au>"
   ],
   "aunty": {
     "type": "preact-app",
@@ -25,7 +26,7 @@
     "classnames": "^2.2.5",
     "preact": "^8.2.6",
     "preact-compat": "^3.17.0",
-    "util-dewysiwyg": "git+ssh://git@stash.abc-dev.net.au:7999/news/util-dewysiwyg.git#3.2.0",
+    "util-dewysiwyg": "git+ssh://git@stash.abc-dev.net.au:7999/news/util-dewysiwyg.git#3.8.0",
     "util-news-selectors": "git+ssh://git@stash.abc-dev.net.au:7999/news/util-news-selectors.git#2.0.2"
   }
 }

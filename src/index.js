@@ -14,7 +14,6 @@ const IMAGE_DIMENSIONS_SRC_SEGMENT_REGEX = /\d+x\d+-\d+x\d+/;
 const THREE_TWO_IMAGE_SRC_SEGMENT = '3x2-460x307';
 const P2_IMAGE_DIMENSIONS_SRC_SEGMENT_REGEX = /\d+x\d+-thumbnail/;
 const P2_THREE_TWO_IMAGE_SRC_SEGMENT = '3x2-large';
-const SPACES = /\s/g;
 const BEACON_NAME = 'interactive-expandable-cards';
 const PLATFORM = {
   '-1': 'p1m',
@@ -24,7 +23,6 @@ const PLATFORM = {
   +(document.body.className.indexOf('platform-standard') > -1) -
     +(document.body.className.indexOf('platform-mobile') > -1)
 ];
-const STORY_SELECTOR = ns('story') + ', main.Main';
 const EMBED_WYSIWYG_SELECTOR = ns('embed:wysiwyg', PLATFORM);
 const EMBED_FULL_CLASS_NAME = { p1s: 'full', p1m: '', p2: 'view-embed-full' }[PLATFORM];
 const MOCK_TEASER_OUTER_CLASS_NAME = (EMBED_WYSIWYG_SELECTOR.split(' ')[0] + ' ' + EMBED_FULL_CLASS_NAME).replace(
@@ -79,7 +77,7 @@ const teaserEls = slice.call(document.querySelectorAll(`[data-beacon="${BEACON_N
   beaconEl.parentElement.removeChild(beaconEl);
 
   if (!window.__ODYSSEY__) {
-    dewysiwyg.normalise(teaserEl);
+    // dewysiwyg.normalise(teaserEl);
   }
 
   const items = splitIntoSections(teaserEl)
@@ -162,7 +160,7 @@ function toItems(section) {
       .replace(P2_IMAGE_DIMENSIONS_SRC_SEGMENT_REGEX, P2_THREE_TWO_IMAGE_SRC_SEGMENT);
   }
 
-  const detail = section.filter(el => el.textContent !== ' ');
+  const detail = section.filter(el => el.textContent !== ' ' || el.tagName === 'A');
 
   return {
     label,
@@ -170,16 +168,6 @@ function toItems(section) {
     title,
     detail
   };
-
-  // TODO: Put this isto the component....
-
-  // if (item.label) {
-  //   item.className = item.label.toLowerCase().replace(SPACES, '-');
-
-  //   if (item.label.length > 12) {
-  //     item.isLabelLong = true;
-  //   }
-  // }
 }
 
 function supportOdyssey() {
