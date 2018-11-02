@@ -11,7 +11,7 @@
     "Andrew Kesper <kesper.andrew@abc.net.au>"
   ],
   "aunty": {
-    "type": "preact-app",
+    "type": "preact",
     "devServer": {
       "hot": false
     }
@@ -20,7 +20,7 @@
     "start": "aunty serve"
   },
   "devDependencies": {
-    "@abcnews/aunty": "^7.6.0"
+    "@abcnews/aunty": "^9.8.2"
   },
   "dependencies": {
     "classnames": "^2.2.5",

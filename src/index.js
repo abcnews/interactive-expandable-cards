@@ -77,7 +77,7 @@ const teaserEls = slice.call(document.querySelectorAll(`[data-beacon="${BEACON_N
   beaconEl.parentElement.removeChild(beaconEl);
 
   if (!window.__ODYSSEY__) {
-    // dewysiwyg.normalise(teaserEl);
+    dewysiwyg.normalise(teaserEl);
   }
 
   const items = splitIntoSections(teaserEl)
