@@ -13,8 +13,7 @@
   "aunty": {
     "type": "preact",
     "devServer": {
-      "hot": false,
-      "https": false
+      "hot": false
     }
   },
   "scripts": {
