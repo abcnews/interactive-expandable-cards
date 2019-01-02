@@ -1,6 +1,6 @@
 {
   "name": "interactive-expandable-cards",
-  "version": "5.6.1",
+  "version": "5.7.0",
   "description": "Groups of expandable \"winners and losers\"-style cards that can be embedded in stories.",
   "license": "MIT",
   "private": true,
