@@ -4,6 +4,7 @@ const Detail = require('../Detail');
 const styles = require('./styles.scss');
 
 const INITIAL_ITEMS_PER_ROW = 2;
+const MAX_ALLOWED_CATEGORIES = 6;
 
 let nextId = 0;
 
@@ -172,7 +173,13 @@ class ExpandableCards extends Component {
   }
 
   render({ items }, { id, itemsPerRow, openIndex }) {
-    const atLeastOneItemHasLabel = items.some(x => x.label);
+    const categories = items.reduce((memo, item) => {
+      if (item.label && memo.indexOf(item.label) < 0) {
+        memo.push(item.label);
+      }
+
+      return memo;
+    }, []);
 
     return (
       <dl role="presentation" className={styles.root} data-component="ExpandableCards">
@@ -192,12 +199,17 @@ class ExpandableCards extends Component {
               <Control
                 id={controlId}
                 label={item.label}
+                categoryIndex={
+                  categories.length > 0 && categories.length < MAX_ALLOWED_CATEGORIES
+                    ? categories.indexOf(item.label)
+                    : 0
+                }
                 image={item.image}
                 onNavigate={this.onNavigate.bind(this, index)}
                 onToggle={this.onToggle.bind(this, index)}
                 open={index === openIndex}
                 regionId={regionId}
-                siblingsHaveLabels={atLeastOneItemHasLabel}
+                siblingsHaveLabels={categories.length > 0}
                 title={item.title}
               />
             </dt>,

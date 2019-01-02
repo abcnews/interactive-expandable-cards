@@ -65,11 +65,32 @@ x:-moz-any-link {
   margin: -0.75rem -0.75rem 0 -0.75rem;
   padding: 0.3125rem 0.5rem;
   border-radius: $radius $radius 0 0;
-  background-color: #07528e;
+  background-color: #01cfff;
   color: #fff;
   font-size: 1rem;
   line-height: 1.1875rem;
   text-transform: uppercase;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+[data-expandable-cards-label-category-index='1'] {
+  background-color: #ff6100;
+}
+
+[data-expandable-cards-label-category-index='2'] {
+  background-color: #00b395;
+}
+
+[data-expandable-cards-label-category-index='3'] {
+  background-color: #ffb300;
+}
+
+[data-expandable-cards-label-category-index='4'] {
+  background-color: #8272d6;
+}
+
+[data-expandable-cards-label-category-index='5'] {
+  background-color: #ea526f;
 }
 
 .long {

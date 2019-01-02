@@ -30,7 +30,7 @@ class Control extends Component {
     }
   }
 
-  render({ id, image, label, onNavigate, onToggle, open, order, regionId, siblingsHaveLabels, title }) {
+  render({ id, categoryIndex, image, label, onNavigate, onToggle, open, order, regionId, siblingsHaveLabels, title }) {
     const matches = title.match(TITLE_CONTAINING_BRACES);
     const titleChildren = matches ? [matches[1], <span>{matches[2]}</span>, matches[3] || ''] : title;
 
@@ -50,6 +50,7 @@ class Control extends Component {
           <div
             className={classNames(styles.label, { [styles.long]: label.length > 12 })}
             data-expandable-cards-label={slug(label)}
+            data-expandable-cards-label-category-index={categoryIndex}
           >
             {label}
           </div>

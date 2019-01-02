@@ -13,14 +13,15 @@
   "aunty": {
     "type": "preact",
     "devServer": {
-      "hot": false
+      "hot": false,
+      "https": false
     }
   },
   "scripts": {
     "start": "aunty serve"
   },
   "devDependencies": {
-    "@abcnews/aunty": "^9.8.2"
+    "@abcnews/aunty": "^9.11.0"
   },
   "dependencies": {
     "classnames": "^2.2.5",
