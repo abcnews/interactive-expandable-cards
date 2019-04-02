@@ -12,7 +12,10 @@
   ],
   "aunty": {
     "type": "preact",
-    "devServer": {
+    "build": {
+      "addModernJS": true
+    },
+    "serve": {
       "hot": false
     }
   },
@@ -20,10 +23,11 @@
     "start": "aunty serve"
   },
   "devDependencies": {
-    "@abcnews/aunty": "^9.11.0"
+    "@abcnews/aunty": "^10.4.0"
   },
   "dependencies": {
     "classnames": "^2.2.5",
+    "core-js": "^3.0.0",
     "preact": "^8.2.6",
     "preact-compat": "^3.17.0",
     "util-dewysiwyg": "git+ssh://git@stash.abc-dev.net.au:7999/news/util-dewysiwyg.git#3.8.0",
