@@ -18,13 +18,13 @@ Examples:
 
 Add `COLOUR` in uppercase followed by the name of the label in uppercase, and the colour in lowercase.
 
-Example: `cardsCOLOURWINNERdarkgreenCOLOURLOSERdarkredNEUTRALdimgrey`
+Example: `cardsCOLOURWINNERdarkgreenCOLOURLOSERdarkredCOLOURNEUTRALdimgrey`
 
 ### Photo colour
 
 Add `TINTPHOTOyes` to re-colour photos to match the colour of the label.
 
-Example: `cardsCOLOURWINNERdarkgreenCOLOURLOSERdarkredNEUTRALdimgreyTINTPHOTOyes`
+Example: `cardsCOLOURWINNERdarkgreenCOLOURLOSERdarkredCOLOURNEUTRALdimgreyTINTPHOTOyes`
 
 
 ## Card-level configuration
