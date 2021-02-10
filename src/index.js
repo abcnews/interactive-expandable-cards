@@ -3,6 +3,7 @@ require('./polyfills');
 const { h, render } = require('preact');
 const dewysiwyg = require('util-dewysiwyg');
 const ns = require('util-news-selectors');
+const alternatingCaseToObject = require('@abcnews/alternating-case-to-object');
 const ExpandableCards = require('./components/ExpandableCards');
 
 const slice = Array.prototype.slice;
@@ -33,6 +34,20 @@ const MOCK_TEASER_INNER_CLASS_NAME = (PLATFORM === 'p2' ? EMBED_WYSIWYG_SELECTOR
   /\./g,
   ' '
 );
+const ALTERNATING_CASE_TO_OBJECT_CONFIG_GLOBAL = {
+  propMap: {
+    colour: 'colourDefault',
+    color: 'colourDefault',
+    tintphoto: 'tintPhoto',
+    tintphotos: 'tintPhoto',
+  }
+};
+const ALTERNATING_CASE_TO_OBJECT_CONFIG_SINGLE = {
+  propMap: {
+    colour: 'colourOverride',
+    color: 'colourOverride',
+  }
+};
 
 // Mock WYSIWYG teaser containing beacon for embed-less cards
 
@@ -53,6 +68,7 @@ slice.call(document.querySelectorAll('a[name^="cards"]')).forEach((startNode, in
   }
 
   beaconEl.setAttribute('data-beacon', BEACON_NAME);
+  beaconEl.setAttribute('data-config', startNode.getAttribute('name') || '');
   outerEl.className = MOCK_TEASER_OUTER_CLASS_NAME;
 
   betweenNodes.forEach(node => {
@@ -76,6 +92,8 @@ const teaserEls = slice.call(document.querySelectorAll(`[data-beacon="${BEACON_N
 
   beaconEl.parentElement.removeChild(beaconEl);
 
+  let config = alternatingCaseToObject(beaconEl.getAttribute('data-config') || '', ALTERNATING_CASE_TO_OBJECT_CONFIG_GLOBAL);
+
   if (!window.__ODYSSEY__) {
     dewysiwyg.normalise(teaserEl);
   }
@@ -86,7 +104,7 @@ const teaserEls = slice.call(document.querySelectorAll(`[data-beacon="${BEACON_N
 
   slice.call(teaserEl.childNodes).forEach(node => node.parentElement.removeChild(node));
 
-  render(<ExpandableCards items={items} />, teaserEl, teaserEl.lastChild);
+  render(<ExpandableCards items={items} config={config} />, teaserEl, teaserEl.lastChild);
 
   return teaserEl;
 });
@@ -127,6 +145,16 @@ function splitIntoSections(teaserEl) {
 }
 
 function toItems(section) {
+
+  let config = {};
+  section = section.filter(el => {
+    if (el.tagName === 'A' && (el.getAttribute('name') || '').indexOf('card') === 0) {
+      config = { ...config, ...alternatingCaseToObject(el.getAttribute('name') || '', ALTERNATING_CASE_TO_OBJECT_CONFIG_SINGLE) };
+      return false;
+    }
+    return true;
+  });
+
   const headingEl = section.shift();
 
   let title = headingEl.textContent;
@@ -166,7 +194,8 @@ function toItems(section) {
     label,
     image,
     title,
-    detail
+    detail,
+    config
   };
 }
 

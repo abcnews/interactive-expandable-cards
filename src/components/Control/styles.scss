@@ -75,26 +75,6 @@ x:-moz-any-link {
   text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
 }
 
-[data-expandable-cards-label-category-index='1'] {
-  background-color: #ff6100;
-}
-
-[data-expandable-cards-label-category-index='2'] {
-  background-color: #00b395;
-}
-
-[data-expandable-cards-label-category-index='3'] {
-  background-color: #ffb300;
-}
-
-[data-expandable-cards-label-category-index='4'] {
-  background-color: #8272d6;
-}
-
-[data-expandable-cards-label-category-index='5'] {
-  background-color: #ea526f;
-}
-
 .long {
   font-size: 0.6875rem;
 }
@@ -195,14 +175,18 @@ x:-moz-any-link {
     font-size: 8px;
     line-height: 4; /* IE can't do rem unit line-height on pseudo elements */
     background-color: $bgActiveFallback;
+    background-color: var(--card-heading-bg);
     color: $textActiveFallback;
+    color: var(--card-heading-text);
     text-shadow: 0 -1px 0 $textActiveFallback, 0 -0.5px 0 $textActiveFallback, 0 0.5px 0 $textActiveFallback, 0 1px 0 $textActiveFallback;
+    text-shadow: 0 -1px 0 var(--card-heading-text), 0 -0.5px 0 var(--card-heading-text), 0 0.5px 0 var(--card-heading-text), 0 1px 0 var(--card-heading-text);
   }
 
   .open & {
     box-shadow: $shadow;
     transition: background-color 0.25s, bottom 0.25s, $transitionShadow;
     background-color: $bgActiveFallback;
+    background-color: var(--card-heading-bg);
 
     &::before {
       box-shadow: $tabShadow;
@@ -221,4 +205,11 @@ x:-moz-any-link {
       box-shadow: $tabShadowActive;
     }
   }
+}
+
+.filter {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
 }
