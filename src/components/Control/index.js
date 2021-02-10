@@ -171,8 +171,11 @@ let configColourToHex = colour => {
   }
 };
 let hex = (label, config) => {
-  label = label.toLowerCase().replace(/[^a-z]+/g, '');
-  let labelConfigKey = Object.keys(config).filter(key => key === 'colour'+label || key === 'color'+label)[0];
+  let labelConfigKey;
+  if (label) {
+    let labelName = label.toLowerCase().replace(/[^a-z]+/g, '');
+    labelConfigKey = Object.keys(config).filter(key => label && (key === 'colour'+labelName || key === 'color'+labelName))[0];
+  }
   return configColourToHex(config.colourOverride || config[labelConfigKey] || config.colourDefault) || '#525252';
 };
 let hexToRGB = hex => {
