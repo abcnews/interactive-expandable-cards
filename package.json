@@ -30,7 +30,6 @@
 		"classnames": "^2.2.6",
 		"core-js": "^3.8.3",
 		"preact": "^10.5.12",
-		"preact-compat": "^3.19.0",
 		"util-dewysiwyg": "git+ssh://git@stash.abc-dev.net.au:7999/news/util-dewysiwyg.git#3.8.0",
 		"util-news-selectors": "git+ssh://git@stash.abc-dev.net.au:7999/news/util-news-selectors.git#2.0.2"
 	}
