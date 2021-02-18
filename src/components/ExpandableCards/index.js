@@ -186,6 +186,7 @@ class ExpandableCards extends Component {
         {items.reduce((memo, item, index) => {
           const controlId = `ExpandableCards_${id}__Control_${index}`;
           const regionId = `ExpandableCards_${id}__Region_${index}`;
+          const filterId = `ExpandableCards_${id}__Filter_${index}`;
           const order = 1 + (index % itemsPerRow) + Math.floor(index / itemsPerRow) * itemsPerRow * 2;
 
           return memo.concat([
@@ -194,7 +195,7 @@ class ExpandableCards extends Component {
               role="heading"
               aria-level="3"
               className={styles[`of${itemsPerRow}`]}
-              style={`order:${order};-webkit-order:${order}`}
+              style={{ order: order, '-webkit-order': order }}
             >
               <Control
                 id={controlId}
@@ -211,6 +212,8 @@ class ExpandableCards extends Component {
                 regionId={regionId}
                 siblingsHaveLabels={categories.length > 0}
                 title={item.title}
+                filterId={filterId}
+                config={{ ...this.props.config, ...item.config }}
               />
             </dt>,
             <dd
@@ -219,7 +222,7 @@ class ExpandableCards extends Component {
               role="region"
               aria-hidden={index === openIndex ? 'false' : 'true'}
               aria-labelledby={controlId}
-              style={`order:${order + itemsPerRow};-webkit-order:${order + itemsPerRow}`}
+              style={{ 'order': order+itemsPerRow, '-webkit-order': order+itemsPerRow }}
             >
               <Detail nodes={item.detail} open={index === openIndex} />
             </dd>

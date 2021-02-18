@@ -1,8 +1,9 @@
 $bg: #fff;
-$bgActive: #d9d9d9;
-$shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.12), 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.24);
+$bgActiveFallback: #000;
+$textActiveFallback: #fff;
+$shadow: 0.1rem 0.1rem 1.5rem rgba(0,0,0,.3);
 $tabShadow: 0 0.125rem 0.1875rem rgba(0, 0, 0, 0.12), 0 0.125rem 0.125rem rgba(0, 0, 0, 0.24);
-$shadowActive: 0 0.625rem 1.25rem rgba(0, 0, 0, 0.19), 0 0.375rem 0.375rem rgba(0, 0, 0, 0.23);
+$shadowActive: 0.1rem 0.1rem 1.5rem rgba(0,0,0,.3), 0 0 0.75rem rgba(0,0,0,.6);
 $tabShadowActive: 0 0.6875rem 1.25rem rgba(0, 0, 0, 0.19), 0 0.4375rem 0.375rem rgba(0, 0, 0, 0.23);
 $transitionShadow: box-shadow 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
 $radius: 0.125rem;
@@ -38,6 +39,7 @@ $radius: 0.125rem;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   transition: $transitionShadow;
+  min-height: 1px; // IE bugfix
 
   &:focus {
     outline: none;
@@ -65,32 +67,12 @@ x:-moz-any-link {
   margin: -0.75rem -0.75rem 0 -0.75rem;
   padding: 0.3125rem 0.5rem;
   border-radius: $radius $radius 0 0;
-  background-color: #01cfff;
+  background-color: $bgActiveFallback;
   color: #fff;
   font-size: 1rem;
   line-height: 1.1875rem;
   text-transform: uppercase;
   text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
-}
-
-[data-expandable-cards-label-category-index='1'] {
-  background-color: #ff6100;
-}
-
-[data-expandable-cards-label-category-index='2'] {
-  background-color: #00b395;
-}
-
-[data-expandable-cards-label-category-index='3'] {
-  background-color: #ffb300;
-}
-
-[data-expandable-cards-label-category-index='4'] {
-  background-color: #8272d6;
-}
-
-[data-expandable-cards-label-category-index='5'] {
-  background-color: #ea526f;
 }
 
 .long {
@@ -129,15 +111,13 @@ x:-moz-any-link {
   padding-top: 0.5rem;
   font-size: 1.125rem !important;
   font-weight: normal !important;
-  line-height: 1.5rem;
-  height: 100%;
-
-  @media (min-width: 40rem) {
-    margin: auto 0 !important;
-    padding-top: 0.75rem;
-    font-size: 1.5rem !important;
-    line-height: 2rem;
-  }
+  line-height: 1.3;
+  min-height: 3.5em;
+  height: auto;
+  text-transform: uppercase;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
   &:first-child {
     margin-top: 0 !important;
@@ -165,8 +145,7 @@ x:-moz-any-link {
   bottom: 0;
   border-radius: 0 0 $radius $radius;
   border-top-width: 0;
-  height: 1.5rem;
-  background-color: $bg;
+  border-bottom: 2px solid transparent;
   transition: background-color 0.125s, bottom 0.25s, $transitionShadow;
 
   &::before,
@@ -177,9 +156,9 @@ x:-moz-any-link {
     bottom: -0.75rem;
     left: 50%;
     border-radius: 50%;
-    margin-left: -1.125rem;
-    width: 2.25rem;
-    height: 2.25rem;
+    margin-left: -1rem;
+    width: 2rem;
+    height: 2rem;
   }
 
   &::before {
@@ -192,27 +171,29 @@ x:-moz-any-link {
   }
 
   &::after {
-    background-color: $bg;
-    background-image: url(./open.svg);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 1.5rem;
-    transition: background-color 0.125s, background-image 0.25s;
+    content: '╲╱';
+    font-size: 8px;
+    line-height: 4; /* IE can't do rem unit line-height on pseudo elements */
+    background-color: $bgActiveFallback;
+    background-color: var(--card-heading-bg);
+    color: $textActiveFallback;
+    color: var(--card-heading-text);
+    text-shadow: 0 -1px 0 $textActiveFallback, 0 -0.5px 0 $textActiveFallback, 0 0.5px 0 $textActiveFallback, 0 1px 0 $textActiveFallback;
+    text-shadow: 0 -1px 0 var(--card-heading-text), 0 -0.5px 0 var(--card-heading-text), 0 0.5px 0 var(--card-heading-text), 0 1px 0 var(--card-heading-text);
   }
 
   .open & {
-    bottom: -1.5rem;
-    background-color: $bgActive;
     box-shadow: $shadow;
     transition: background-color 0.25s, bottom 0.25s, $transitionShadow;
+    background-color: $bgActiveFallback;
+    background-color: var(--card-heading-bg);
 
     &::before {
       box-shadow: $tabShadow;
     }
 
     &::after {
-      background-color: $bgActive;
-      background-image: url(./close.svg);
+      content: '╱╲';
       transition: background-color 0.25s, background-image 0.25s;
     }
   }
@@ -224,4 +205,11 @@ x:-moz-any-link {
       box-shadow: $tabShadowActive;
     }
   }
+}
+
+.filter {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
 }
