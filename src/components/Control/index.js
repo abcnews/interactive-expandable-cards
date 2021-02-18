@@ -30,7 +30,7 @@ let hex = (label, config) => {
     let labelName = label.toLowerCase().replace(/[^a-z]+/g, '');
     labelConfigKey = Object.keys(config).filter(key => label && (key === 'colour'+labelName || key === 'color'+labelName))[0];
   }
-  return configColourToHex(config.colourOverride || config[labelConfigKey] || config.colourDefault) || '#525252';
+  return configColourToHex(config.colourOverride || config[labelConfigKey] || config.colourDefault);
 };
 let hexToRGB = hex => {
   if (hex.substring(0, 1) === '#') { // discard it

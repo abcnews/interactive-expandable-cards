@@ -34,6 +34,12 @@ const MOCK_TEASER_INNER_CLASS_NAME = (PLATFORM === 'p2' ? EMBED_WYSIWYG_SELECTOR
   /\./g,
   ' '
 );
+const CONFIG_GLOBAL_DEFAULT = {
+  colourDefault: 'black',
+  colourwinner: 'green',
+  colourloser: 'red',
+  colourneutral: 'grey',
+};
 const ALTERNATING_CASE_TO_OBJECT_CONFIG_GLOBAL = {
   propMap: {
     colour: 'colourDefault',
@@ -92,7 +98,10 @@ const teaserEls = slice.call(document.querySelectorAll(`[data-beacon="${BEACON_N
 
   beaconEl.parentElement.removeChild(beaconEl);
 
-  let config = alternatingCaseToObject(beaconEl.getAttribute('data-config') || '', ALTERNATING_CASE_TO_OBJECT_CONFIG_GLOBAL);
+  let config = {
+    ...CONFIG_GLOBAL_DEFAULT,
+    ...alternatingCaseToObject(beaconEl.getAttribute('data-config') || '', ALTERNATING_CASE_TO_OBJECT_CONFIG_GLOBAL)
+  };
 
   if (!window.__ODYSSEY__) {
     dewysiwyg.normalise(teaserEl);
@@ -149,7 +158,10 @@ function toItems(section) {
   let config = {};
   section = section.filter(el => {
     if (el.tagName === 'A' && (el.getAttribute('name') || '').indexOf('card') === 0) {
-      config = { ...config, ...alternatingCaseToObject(el.getAttribute('name') || '', ALTERNATING_CASE_TO_OBJECT_CONFIG_SINGLE) };
+      config = {
+        ...config,
+        ...alternatingCaseToObject(el.getAttribute('name') || '', ALTERNATING_CASE_TO_OBJECT_CONFIG_SINGLE)
+      };
       return false;
     }
     return true;
