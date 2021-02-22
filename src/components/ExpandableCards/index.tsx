@@ -1,28 +1,57 @@
-const { h, Component } = require('preact');
-const Control = require('../Control');
-const Detail = require('../Detail');
-const styles = require('./styles.scss');
+import { h, Component, createRef } from 'preact';
+import {Control} from '../Control';
+import {Detail} from '../Detail';
+import styles from './styles.scss';
+
+type ExpandableCardsProps = {
+  items: ExpandableCardsItem[],
+  config: ExpandableCardsItemConfig
+}
+
+type ExpandableCardsState = {
+  itemsPerRow: number,
+  id: number,
+  openIndex: number | null,
+  toggling: boolean
+}
+
+export type ExpandableCardsItem = {
+  label:string,
+      image:string,
+      title:string,
+      detail: HTMLElement[],
+      config: ExpandableCardsItemConfig
+}
+
+export type ExpandableCardsItemConfig = {
+
+}
 
 const INITIAL_ITEMS_PER_ROW = 2;
 const MAX_ALLOWED_CATEGORIES = 6;
 
 let nextId = 0;
 
-class ExpandableCards extends Component {
-  constructor(props) {
+export class ExpandableCards extends Component<ExpandableCardsProps, ExpandableCardsState> {
+
+  baseRef = createRef();
+  itemsOpened:ExpandableCardsItem[] = [];
+  logged: boolean;
+  measurementIntervalId: number | undefined;
+
+  constructor(props:ExpandableCardsProps) {
     super(props);
 
     this.state = {
       id: nextId++,
       itemsPerRow: INITIAL_ITEMS_PER_ROW,
-      openIndex: null
+      openIndex: null,
+      toggling: false
     };
 
     this.itemsOpened = [];
     this.logged = false;
 
-    this.integrateWithOdyssey = this.integrateWithOdyssey.bind(this);
-    this.integrateWithPhase1Mobile = this.integrateWithPhase1Mobile.bind(this);
     this.measureBase = this.measureBase.bind(this);
     this.sendLog = this.sendLog.bind(this);
   }
@@ -66,24 +95,40 @@ class ExpandableCards extends Component {
   }
 
   componentDidMount() {
-    this.integrateWithOdyssey();
-    this.integrateWithPhase1Mobile();
+    // Integrate with Odyssey
+    const integrateWithOdyssey = () => {
+      this.baseRef.current.parentElement.classList.remove('u-richtext');
+      this.baseRef.current.parentElement.classList.add('u-pull');
+    }
+    if (window.__ODYSSEY__) {
+      integrateWithOdyssey();
+    } else {
+      window.addEventListener('odyssey:api', integrateWithOdyssey);
+    }
+
+    // Integrate with phase 1 mobile
+    if (this.baseRef.current.parentElement.className.indexOf('embed-wysiwyg') > -1) {
+      this.baseRef.current.parentElement.classList.add(styles.borderless);
+    }
+
     this.measureBase();
-    this.measurementInterval = setInterval(this.measureBase, 250);
+    this.measurementIntervalId = window.setInterval(this.measureBase, 250);
     window.addEventListener('beforeunload', this.sendLog);
     window.addEventListener('unload', this.sendLog);
   }
 
   componentWillUnmount() {
-    clearInterval(this.measurementInterval);
+    clearInterval(this.measurementIntervalId);
     window.removeEventListener('beforeunload', this.sendLog);
     window.removeEventListener('unload', this.sendLog);
     this.sendLog();
   }
 
+  // TODO: this should be observed in a way that doesn't involve intervals.
   measureBase() {
-    const width = this.base.offsetWidth;
-    let itemsPerRow;
+
+    const width = this.baseRef.current.offsetWidth;
+    let itemsPerRow: number;
 
     if (width >= 1480) {
       itemsPerRow = 6;
@@ -102,22 +147,10 @@ class ExpandableCards extends Component {
     if (itemsPerRow !== this.state.itemsPerRow) {
       this.setState({ itemsPerRow });
     }
+
   }
 
-  integrateWithOdyssey() {
-    if (window.__ODYSSEY__) {
-      this.base.parentElement.classList.remove('u-richtext');
-      this.base.parentElement.classList.add('u-pull');
-    } else {
-      window.addEventListener('odyssey:api', this.integrateWithOdyssey);
-    }
-  }
 
-  integrateWithPhase1Mobile() {
-    if (this.base.parentElement.className.indexOf('embed-wysiwyg') > -1) {
-      this.base.parentElement.classList.add(styles.borderless);
-    }
-  }
 
   onNavigate(index, event) {
     let nextIndex = index;
@@ -142,7 +175,7 @@ class ExpandableCards extends Component {
 
     if (nextIndex > -1 && nextIndex < this.props.items.length) {
       event.preventDefault();
-      [...this.base.querySelectorAll('[data-component="Control"]')].forEach((el, index) => {
+      [...this.baseRef.current.querySelectorAll('[data-component="Control"]')].forEach((el, index) => {
         if (index === nextIndex) {
           el.focus();
         }
@@ -151,9 +184,8 @@ class ExpandableCards extends Component {
   }
 
   onToggle(index) {
-    if (this.isIgnoringToggles) {
-      return;
-    }
+    // Don't toggle while toggling.
+    if (this.state.toggling) return;
 
     if (this.state.openIndex === index) {
       return this.setState({ openIndex: null });
@@ -162,28 +194,25 @@ class ExpandableCards extends Component {
       return this.setState({ openIndex: index });
     }
 
-    this.isIgnoringToggles = true;
-    this.setState({ openIndex: null });
+    this.setState({toggling: true, openIndex: null});
 
     setTimeout(() => {
-      this.isIgnoringToggles = false;
       this.itemsOpened.push(index);
-      this.setState({ openIndex: index });
+      this.setState({ openIndex: index, toggling: false });
     }, 250);
   }
 
-  render({ items }, { id, itemsPerRow, openIndex }) {
-    const categories = items.reduce((memo, item) => {
+  render({ items }:ExpandableCardsProps, { id, itemsPerRow, openIndex }:ExpandableCardsState) {
+    const categories = items.reduce<string[]>((memo, item) => {
       if (item.label && memo.indexOf(item.label) < 0) {
         memo.push(item.label);
       }
-
       return memo;
     }, []);
 
     return (
-      <dl role="presentation" className={styles.root} data-component="ExpandableCards">
-        {items.reduce((memo, item, index) => {
+      <dl ref={this.baseRef} role="presentation" className={styles.root} data-component="ExpandableCards">
+        {items.reduce<HTMLDListElement[]>((memo, item, index) => {
           const controlId = `ExpandableCards_${id}__Control_${index}`;
           const regionId = `ExpandableCards_${id}__Region_${index}`;
           const filterId = `ExpandableCards_${id}__Filter_${index}`;
@@ -232,5 +261,3 @@ class ExpandableCards extends Component {
     );
   }
 }
-
-module.exports = ExpandableCards;

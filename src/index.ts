@@ -1,6 +1,6 @@
-const {getGeneration, GENERATIONS} = require('@abcnews/env-utils');
-const legacy = require('./legacy');
-const init = require('./init');
+import {getGeneration, GENERATIONS} from '@abcnews/env-utils';
+import {init as legacy} from './legacy';
+import {init} from './pl';
 
 const generation = getGeneration();
 if (generation === GENERATIONS.P1 || generation === GENERATIONS.P2) {

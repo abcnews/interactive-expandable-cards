@@ -1,14 +1,13 @@
-require('./polyfills');
+import './polyfills';
 
-const { h, render } = require('preact');
-const dewysiwyg = require('util-dewysiwyg');
-const ns = require('util-news-selectors');
-const ExpandableCards = require('./components/ExpandableCards');
-const alternatingCaseToObject = require('@abcnews/alternating-case-to-object');
+import { h, render } from 'preact';
+import dewysiwyg from 'util-dewysiwyg';
+import ns from 'util-news-selectors';
+import {ExpandableCards} from './components/ExpandableCards';
+import type {ExpandableCardsItem} from './components/ExpandableCards'
+import alternatingCaseToObject from '@abcnews/alternating-case-to-object';
 
-
-module.exports = () => {
-
+export const init = () => {
 
   const slice = Array.prototype.slice;
 
@@ -111,9 +110,11 @@ module.exports = () => {
       dewysiwyg.normalise(teaserEl);
     }
 
+
+
     const items = splitIntoSections(teaserEl)
       .map(toItems)
-      .filter(x => x);
+      .filter((x):x is ExpandableCardsItem => x !== null);
 
     slice.call(teaserEl.childNodes).forEach(node => node.parentElement.removeChild(node));
 
@@ -123,8 +124,8 @@ module.exports = () => {
   });
 
   function splitIntoSections(teaserEl) {
-    const sections = [];
-    let buffer = [];
+    const sections: HTMLElement[][] = [];
+    let buffer: HTMLElement[] = [];
 
     const add = () => {
       if (!buffer.length) {
@@ -132,9 +133,8 @@ module.exports = () => {
       }
 
       sections.push(
-        buffer.map(node => {
-          node.parentElement.removeChild(node);
-
+        buffer.map((node) => {
+          node.parentElement && node.parentElement.removeChild(node);
           return node;
         })
       );

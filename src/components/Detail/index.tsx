@@ -1,26 +1,37 @@
-const classNames = require('classnames');
-const { h, Component } = require('preact');
-const styles = require('./styles.scss');
+import classNames from 'classnames';
+import { h, Component, createRef } from 'preact';
+import styles from './styles.scss';
+
+type DetailProps = {
+  open: boolean,
+  nodes: HTMLElement[]
+}
+
+
 
 const TABBABLE_SELECTOR = '[href], button, input:not([type="hidden"]), select, textarea, [tabindex]';
 
-class Detail extends Component {
-  constructor(props) {
+export class Detail extends Component<DetailProps> {
+
+  contentRef = createRef();
+  tabbable: {el: HTMLElement, initial: string}[] = [];
+
+  constructor(props:DetailProps) {
     super(props);
 
     this.toggleTabbable = this.toggleTabbable.bind(this);
-    this.getContentRef = this.getContentRef.bind(this);
+
   }
 
-  getContentRef(el) {
-    this.content = el;
-  }
 
   animateHeightChange() {
-    this.base.style.height = `${this.content.clientHeight}px`;
-    setTimeout(() => {
-      this.base.style.height = this.props.open ? 'auto' : '0';
-    }, this.props.open ? 250 : 0);
+    if (this.base instanceof HTMLElement) {
+      const el = this.base;
+      el.style.height = `${this.contentRef.current.clientHeight}px`;
+      setTimeout(() => {
+        el.style.height = this.props.open ? 'auto' : '0';
+      }, this.props.open ? 250 : 0);
+    }
   }
 
   toggleTabbable() {
@@ -32,17 +43,17 @@ class Detail extends Component {
           x.el.setAttribute('tabindex', x.initial);
         }
       } else {
-        x.el.setAttribute('tabindex', -1);
+        x.el.setAttribute('tabindex', '-1');
       }
     });
   }
 
   componentDidMount() {
     this.props.nodes.forEach(node => {
-      this.content.appendChild(node);
+      this.contentRef.current.appendChild(node);
     });
 
-    this.tabbable = [...this.content.querySelectorAll(TABBABLE_SELECTOR)].map(el => ({
+    this.tabbable = [...this.contentRef.current.querySelectorAll(TABBABLE_SELECTOR)].map(el => ({
       el,
       initial: el.getAttribute('tabindex')
     }));
@@ -63,10 +74,9 @@ class Detail extends Component {
   render() {
     return (
       <div className={classNames(styles.root, { [styles.open]: this.props.open })} data-component="Detail">
-        <div ref={this.getContentRef} className={`${styles.content} u-richtext`} />
+        <div ref={this.contentRef} className={`${styles.content} u-richtext`} />
       </div>
     );
   }
 }
 
-module.exports = Detail;
