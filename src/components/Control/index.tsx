@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import { h, Component, createRef } from 'preact';
+import { hex, hexToRGB, rgbGamma, blackOrWhiteText } from '../../lib/utils';
 import styles from './styles.scss';
 
 type ControlProps = {
@@ -23,85 +24,7 @@ type ControlConfig = {
   tintPhoto?: boolean;
 };
 
-type Rgb = {
-  r: number;
-  g: number;
-  b: number;
-};
-
-type RgbGamma = {
-  r: number;
-  g: number;
-  b: number;
-};
-
-type ColourName = keyof typeof namedColours;
-
-const t = ['a', 'b'] as const;
-
-const SCROLL_INTO_VIEW_OPTIONS = { behavior: 'smooth', block: 'center', inline: 'end' };
 const TITLE_SCROLL_MARGIN = 48;
-const TITLE_CONTAINING_BRACES = /(.*)\((.*)\)(.*)?/;
-
-let namedColours: { [key: string]: string } = {
-  green: '#049a5e',
-  positive: '#049a5e',
-  red: '#b71a3c',
-  negative: '#b71a3c',
-  grey: '#b5bbbc',
-  gray: '#b5bbbc',
-  neutral: '#b5bbbc',
-  black: '#000000',
-  default: '#000000',
-  blue: '#1467cc'
-} as const;
-
-const configColourToHex = (colour: unknown) => {
-  const c = String(colour).toLowerCase();
-  return namedColours.hasOwnProperty(c)
-    ? namedColours[c]
-    : (c.length === 6 || c.length === 3) && /^[0-9a-f]+$/.test(c)
-    ? '#' + colour
-    : namedColours['default'];
-};
-
-let hex = (label, config) => {
-  let labelConfigKey;
-  if (label) {
-    let labelName = label.toLowerCase().replace(/[^a-z]+/g, '');
-    labelConfigKey = Object.keys(config).filter(
-      key => label && (key === 'colour' + labelName || key === 'color' + labelName)
-    )[0];
-  }
-  return configColourToHex(config.colourOverride || config[labelConfigKey] || config.colourDefault);
-};
-let hexToRGB = (hex: string): Rgb => {
-  if (hex.substring(0, 1) === '#') {
-    // discard it
-    hex = hex.substring(1);
-  }
-  if (hex.length === 3) {
-    // shorthand syntax
-    hex = hex.replace(/^(.)(.)(.)$/, '$1$1$2$2$3$3');
-  }
-  return {
-    r: parseInt(hex.substring(0, 2), 16),
-    g: parseInt(hex.substring(2, 4), 16),
-    b: parseInt(hex.substring(4, 6), 16)
-  };
-};
-let perceivedBrightness = (rgb: Rgb): number => {
-  // Based on https://www.nbdtech.com/Blog/archive/2008/04/27/Calculating-the-Perceived-Brightness-of-a-Color.aspx
-  return Math.floor(Math.sqrt(rgb.r * rgb.r * 0.241 + rgb.g * rgb.g * 0.691 + rgb.b * rgb.b * 0.068));
-};
-let blackOrWhiteText = backgroundRGB => {
-  return perceivedBrightness(backgroundRGB) < 145 ? 'white' : 'black';
-};
-let rgbGamma = (rgb: Rgb): RgbGamma => {
-  let brightness = perceivedBrightness(rgb);
-  const calcGamma = (channel: 'r' | 'g' | 'b') => (255 + brightness / 2 - rgb[channel]) / 255;
-  return { r: calcGamma('r'), g: calcGamma('g'), b: calcGamma('b') };
-};
 
 export class Control extends Component<ControlProps, ControlState> {
   toggleRef = createRef();
@@ -117,7 +40,7 @@ export class Control extends Component<ControlProps, ControlState> {
         const windowHeight = window.innerHeight;
 
         if (top < TITLE_SCROLL_MARGIN || bottom > windowHeight - TITLE_SCROLL_MARGIN) {
-          this.toggleRef.current.scrollIntoView(SCROLL_INTO_VIEW_OPTIONS);
+          this.toggleRef.current.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'end' });
         }
       }, 250);
     }
@@ -137,7 +60,7 @@ export class Control extends Component<ControlProps, ControlState> {
     filterId,
     config
   }: ControlProps) {
-    const matches = title.match(TITLE_CONTAINING_BRACES);
+    const matches = title.match(/(.*)\((.*)\)(.*)?/); // Does the title contain braces?
     const titleChildren = matches ? [matches[1], <span>{matches[2]}</span>, matches[3] || ''] : title;
     const bgHex = hex(label, config);
     const bgRGB = hexToRGB(bgHex);
