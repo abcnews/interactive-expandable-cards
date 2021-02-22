@@ -15,91 +15,98 @@ type ControlProps = {
   siblingsHaveLabels: boolean;
   title: string;
   filterId: string;
-}
+};
 
-type ControlState = {
-
-}
+type ControlState = {};
 
 type ControlConfig = {
-  tintPhoto?: boolean
-}
+  tintPhoto?: boolean;
+};
 
 type Rgb = {
   r: number;
   g: number;
   b: number;
-}
+};
 
 type RgbGamma = {
-r: number;
+  r: number;
   g: number;
   b: number;
-}
+};
 
 type ColourName = keyof typeof namedColours;
 
-const t = ['a','b'] as const
+const t = ['a', 'b'] as const;
 
 const SCROLL_INTO_VIEW_OPTIONS = { behavior: 'smooth', block: 'center', inline: 'end' };
 const TITLE_SCROLL_MARGIN = 48;
 const TITLE_CONTAINING_BRACES = /(.*)\((.*)\)(.*)?/;
 
-let namedColours: {[key: string]: string} = {
-  green: '#049a5e', positive: '#049a5e',
-  red: '#b71a3c', negative: '#b71a3c',
-  grey: '#b5bbbc', gray: '#b5bbbc', neutral: '#b5bbbc',
-  black: '#000000', default: '#000000',
-  blue: '#1467cc',
+let namedColours: { [key: string]: string } = {
+  green: '#049a5e',
+  positive: '#049a5e',
+  red: '#b71a3c',
+  negative: '#b71a3c',
+  grey: '#b5bbbc',
+  gray: '#b5bbbc',
+  neutral: '#b5bbbc',
+  black: '#000000',
+  default: '#000000',
+  blue: '#1467cc'
 } as const;
 
-const configColourToHex = (colour:unknown) => {
-    const c = String(colour).toLowerCase();
-    return namedColours.hasOwnProperty(c) ? namedColours[c] : ((c.length === 6 || c.length === 3) && /^[0-9a-f]+$/.test(c)) ? '#'+colour : namedColours['default'];
+const configColourToHex = (colour: unknown) => {
+  const c = String(colour).toLowerCase();
+  return namedColours.hasOwnProperty(c)
+    ? namedColours[c]
+    : (c.length === 6 || c.length === 3) && /^[0-9a-f]+$/.test(c)
+    ? '#' + colour
+    : namedColours['default'];
 };
 
 let hex = (label, config) => {
   let labelConfigKey;
   if (label) {
     let labelName = label.toLowerCase().replace(/[^a-z]+/g, '');
-    labelConfigKey = Object.keys(config).filter(key => label && (key === 'colour'+labelName || key === 'color'+labelName))[0];
+    labelConfigKey = Object.keys(config).filter(
+      key => label && (key === 'colour' + labelName || key === 'color' + labelName)
+    )[0];
   }
   return configColourToHex(config.colourOverride || config[labelConfigKey] || config.colourDefault);
 };
-let hexToRGB = (hex: string):Rgb => {
-  if (hex.substring(0, 1) === '#') { // discard it
+let hexToRGB = (hex: string): Rgb => {
+  if (hex.substring(0, 1) === '#') {
+    // discard it
     hex = hex.substring(1);
   }
-  if (hex.length === 3) { // shorthand syntax
+  if (hex.length === 3) {
+    // shorthand syntax
     hex = hex.replace(/^(.)(.)(.)$/, '$1$1$2$2$3$3');
   }
   return {
     r: parseInt(hex.substring(0, 2), 16),
     g: parseInt(hex.substring(2, 4), 16),
-    b: parseInt(hex.substring(4, 6), 16),
-  }
+    b: parseInt(hex.substring(4, 6), 16)
+  };
 };
 let perceivedBrightness = (rgb: Rgb): number => {
   // Based on https://www.nbdtech.com/Blog/archive/2008/04/27/Calculating-the-Perceived-Brightness-of-a-Color.aspx
-  return Math.floor(Math.sqrt(
-    (rgb.r * rgb.r * 0.241) +
-    (rgb.g * rgb.g * 0.691) +
-    (rgb.b * rgb.b * 0.068)
-  ));
+  return Math.floor(Math.sqrt(rgb.r * rgb.r * 0.241 + rgb.g * rgb.g * 0.691 + rgb.b * rgb.b * 0.068));
 };
 let blackOrWhiteText = backgroundRGB => {
   return perceivedBrightness(backgroundRGB) < 145 ? 'white' : 'black';
-}
-let rgbGamma = (rgb: Rgb):RgbGamma => {
+};
+let rgbGamma = (rgb: Rgb): RgbGamma => {
   let brightness = perceivedBrightness(rgb);
-  const calcGamma = (channel: 'r'|'g'|'b') => (255 + (brightness / 2) - rgb[channel]) / 255;
-  return {r: calcGamma('r'), g: calcGamma('g'), b: calcGamma('b')};
-}
+  const calcGamma = (channel: 'r' | 'g' | 'b') => (255 + brightness / 2 - rgb[channel]) / 255;
+  return { r: calcGamma('r'), g: calcGamma('g'), b: calcGamma('b') };
+};
 
 export class Control extends Component<ControlProps, ControlState> {
   toggleRef = createRef();
   rootRef = createRef();
-  constructor(props:ControlProps) {
+  constructor(props: ControlProps) {
     super(props);
   }
 
@@ -116,7 +123,20 @@ export class Control extends Component<ControlProps, ControlState> {
     }
   }
 
-  render({ id, categoryIndex, image, label, onNavigate, onToggle, open, regionId, siblingsHaveLabels, title, filterId, config }:ControlProps) {
+  render({
+    id,
+    categoryIndex,
+    image,
+    label,
+    onNavigate,
+    onToggle,
+    open,
+    regionId,
+    siblingsHaveLabels,
+    title,
+    filterId,
+    config
+  }: ControlProps) {
     const matches = title.match(TITLE_CONTAINING_BRACES);
     const titleChildren = matches ? [matches[1], <span>{matches[2]}</span>, matches[3] || ''] : title;
     const bgHex = hex(label, config);

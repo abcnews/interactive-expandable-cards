@@ -7,8 +7,8 @@ if (!Element.prototype.matches) {
 }
 
 if (!Element.prototype.closest) {
-  Element.prototype.closest = function(s) {
-    var el:Element | null = this;
+  Element.prototype.closest = function (s) {
+    var el: Element | null = this;
     if (!document.documentElement.contains(el)) return null;
     do {
       if (el.matches(s)) return el;

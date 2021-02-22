@@ -3,12 +3,11 @@ import './polyfills';
 import { h, render } from 'preact';
 import dewysiwyg from 'util-dewysiwyg';
 import ns from 'util-news-selectors';
-import {ExpandableCards} from './components/ExpandableCards';
-import type {ExpandableCardsItem} from './components/ExpandableCards'
+import { ExpandableCards } from './components/ExpandableCards';
+import type { ExpandableCardsItem } from './components/ExpandableCards';
 import alternatingCaseToObject from '@abcnews/alternating-case-to-object';
 
 export const init = () => {
-
   const slice = Array.prototype.slice;
 
   const LABEL_DELIMETER = ': ';
@@ -41,20 +40,20 @@ export const init = () => {
     colourDefault: 'black',
     colourwinner: 'green',
     colourloser: 'red',
-    colourneutral: 'grey',
+    colourneutral: 'grey'
   };
   const ALTERNATING_CASE_TO_OBJECT_CONFIG_GLOBAL = {
     propMap: {
       colour: 'colourDefault',
       color: 'colourDefault',
       tintphoto: 'tintPhoto',
-      tintphotos: 'tintPhoto',
+      tintphotos: 'tintPhoto'
     }
   };
   const ALTERNATING_CASE_TO_OBJECT_CONFIG_SINGLE = {
     propMap: {
       colour: 'colourOverride',
-      color: 'colourOverride',
+      color: 'colourOverride'
     }
   };
 
@@ -110,11 +109,9 @@ export const init = () => {
       dewysiwyg.normalise(teaserEl);
     }
 
-
-
     const items = splitIntoSections(teaserEl)
       .map(toItems)
-      .filter((x):x is ExpandableCardsItem => x !== null);
+      .filter((x): x is ExpandableCardsItem => x !== null);
 
     slice.call(teaserEl.childNodes).forEach(node => node.parentElement.removeChild(node));
 
@@ -133,7 +130,7 @@ export const init = () => {
       }
 
       sections.push(
-        buffer.map((node) => {
+        buffer.map(node => {
           node.parentElement && node.parentElement.removeChild(node);
           return node;
         })
@@ -158,7 +155,6 @@ export const init = () => {
   }
 
   function toItems(section) {
-
     let config = {};
     section = section.filter(el => {
       if (el.tagName === 'A' && (el.getAttribute('name') || '').indexOf('card') === 0) {
@@ -231,5 +227,4 @@ export const init = () => {
   if (process.env.NODE_ENV === 'development') {
     require('preact/devtools');
   }
-
-}
+};

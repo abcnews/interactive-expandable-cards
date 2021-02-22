@@ -1,31 +1,29 @@
 import { h, Component, createRef } from 'preact';
-import {Control} from '../Control';
-import {Detail} from '../Detail';
+import { Control } from '../Control';
+import { Detail } from '../Detail';
 import styles from './styles.scss';
 
 type ExpandableCardsProps = {
-  items: ExpandableCardsItem[],
-  config: ExpandableCardsItemConfig
-}
+  items: ExpandableCardsItem[];
+  config: ExpandableCardsItemConfig;
+};
 
 type ExpandableCardsState = {
-  itemsPerRow: number,
-  id: number,
-  openIndex: number | null,
-  toggling: boolean
-}
+  itemsPerRow: number;
+  id: number;
+  openIndex: number | null;
+  toggling: boolean;
+};
 
 export type ExpandableCardsItem = {
-  label:string,
-      image:string,
-      title:string,
-      detail: HTMLElement[],
-      config: ExpandableCardsItemConfig
-}
+  label: string;
+  image: string;
+  title: string;
+  detail: HTMLElement[];
+  config: ExpandableCardsItemConfig;
+};
 
-export type ExpandableCardsItemConfig = {
-
-}
+export type ExpandableCardsItemConfig = {};
 
 const INITIAL_ITEMS_PER_ROW = 2;
 const MAX_ALLOWED_CATEGORIES = 6;
@@ -33,13 +31,12 @@ const MAX_ALLOWED_CATEGORIES = 6;
 let nextId = 0;
 
 export class ExpandableCards extends Component<ExpandableCardsProps, ExpandableCardsState> {
-
   baseRef = createRef();
-  itemsOpened:ExpandableCardsItem[] = [];
+  itemsOpened: ExpandableCardsItem[] = [];
   logged: boolean;
   measurementIntervalId: number | undefined;
 
-  constructor(props:ExpandableCardsProps) {
+  constructor(props: ExpandableCardsProps) {
     super(props);
 
     this.state = {
@@ -99,7 +96,7 @@ export class ExpandableCards extends Component<ExpandableCardsProps, ExpandableC
     const integrateWithOdyssey = () => {
       this.baseRef.current.parentElement.classList.remove('u-richtext');
       this.baseRef.current.parentElement.classList.add('u-pull');
-    }
+    };
     if (window.__ODYSSEY__) {
       integrateWithOdyssey();
     } else {
@@ -126,7 +123,6 @@ export class ExpandableCards extends Component<ExpandableCardsProps, ExpandableC
 
   // TODO: this should be observed in a way that doesn't involve intervals.
   measureBase() {
-
     const width = this.baseRef.current.offsetWidth;
     let itemsPerRow: number;
 
@@ -147,10 +143,7 @@ export class ExpandableCards extends Component<ExpandableCardsProps, ExpandableC
     if (itemsPerRow !== this.state.itemsPerRow) {
       this.setState({ itemsPerRow });
     }
-
   }
-
-
 
   onNavigate(index, event) {
     let nextIndex = index;
@@ -194,7 +187,7 @@ export class ExpandableCards extends Component<ExpandableCardsProps, ExpandableC
       return this.setState({ openIndex: index });
     }
 
-    this.setState({toggling: true, openIndex: null});
+    this.setState({ toggling: true, openIndex: null });
 
     setTimeout(() => {
       this.itemsOpened.push(index);
@@ -202,7 +195,7 @@ export class ExpandableCards extends Component<ExpandableCardsProps, ExpandableC
     }, 250);
   }
 
-  render({ items }:ExpandableCardsProps, { id, itemsPerRow, openIndex }:ExpandableCardsState) {
+  render({ items }: ExpandableCardsProps, { id, itemsPerRow, openIndex }: ExpandableCardsState) {
     const categories = items.reduce<string[]>((memo, item) => {
       if (item.label && memo.indexOf(item.label) < 0) {
         memo.push(item.label);
@@ -251,7 +244,7 @@ export class ExpandableCards extends Component<ExpandableCardsProps, ExpandableC
               role="region"
               aria-hidden={index === openIndex ? 'false' : 'true'}
               aria-labelledby={controlId}
-              style={{ 'order': order+itemsPerRow, '-webkit-order': order+itemsPerRow }}
+              style={{ order: order + itemsPerRow, '-webkit-order': order + itemsPerRow }}
             >
               <Detail nodes={item.detail} open={index === openIndex} />
             </dd>
