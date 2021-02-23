@@ -59,57 +59,12 @@ export const ExpandableCards = ({ items, config }: ExpandableCardsProps) => {
     }
   };
 
-  // TODO: remove logging
-  const sendLog = () => {
-    // Don't continue if recently logged or can't log
-    if (logged || typeof navigator.sendBeacon === 'undefined') return;
-
-    setLogged(true);
-    var now = new Date();
-    var idMatches = document.URL.match(/\d{5,}/);
-    var openedUnique = new Set(itemsOpened);
-    var firestoreURL = `https://firestore.googleapis.com/v1beta1/projects/interactive-expandable-cards/databases/(default)/documents/view/`;
-    var firestoreData = {
-      fields: {
-        cmid: { integerValue: idMatches ? parseInt(idMatches[0], 10) : 0 },
-        url: { stringValue: document.URL },
-        requestedAt: { timestampValue: new Date(window.performance.timing.navigationStart).toISOString() },
-        timeToLoad: {
-          doubleValue: (window.performance.timing.domComplete - window.performance.timing.navigationStart) / 1000
-        },
-        timeOnPage: { doubleValue: (now.getTime() - window.performance.timing.domComplete) / 1000 },
-        itemsTotal: { integerValue: items.length },
-        itemsPerRow: { integerValue: itemsPerRow },
-        itemsOpened: { integerValue: itemsOpened.length },
-        itemsOpenedUnique: { integerValue: openedUnique.size },
-        itemsOpenedPct: { doubleValue: (openedUnique.size / items.length) * 100 },
-        itemsOpenedArray: {
-          arrayValue: {
-            values: itemsOpened.map(x => ({ integerValue: x }))
-          }
-        },
-        itemsOpenedArrayUnique: {
-          arrayValue: {
-            values: [...openedUnique].map(x => ({ integerValue: x }))
-          }
-        }
-      }
-    };
-    navigator.sendBeacon(firestoreURL, JSON.stringify(firestoreData));
-  };
-
   useEffect(() => {
     measureBase();
     setMeasurementIntervalId(window.setInterval(measureBase, 250));
-    // TODO: This should not use beforeunload and unload events. See: https://kapeli.com/dash_share?docset_file=JavaScript&docset_name=JavaScript&path=developer.mozilla.org/en-US/docs/Web/API/navigator/sendBeacon.html&platform=javascript&repo=Main&source=developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon
-    window.addEventListener('beforeunload', sendLog);
-    window.addEventListener('unload', sendLog);
 
     return () => {
       window.clearInterval(measurementIntervalId);
-      window.removeEventListener('beforeunload', sendLog);
-      window.removeEventListener('unload', sendLog);
-      sendLog();
     };
   }, []);
 
