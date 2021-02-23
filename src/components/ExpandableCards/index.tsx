@@ -1,4 +1,5 @@
-import { h, Component, createRef } from 'preact';
+import { h, Fragment } from 'preact';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { Control } from '../Control';
 import { Detail } from '../Detail';
 import styles from './styles.scss';
@@ -30,37 +31,43 @@ const MAX_ALLOWED_CATEGORIES = 6;
 
 let nextId = 0;
 
-export class ExpandableCards extends Component<ExpandableCardsProps, ExpandableCardsState> {
-  baseRef = createRef();
-  itemsOpened: ExpandableCardsItem[] = [];
-  logged: boolean;
-  measurementIntervalId: number | undefined;
+export const ExpandableCards = ({ items, config }: ExpandableCardsProps) => {
+  const baseRef = useRef<HTMLDListElement>();
+  const [itemsOpened, setItemsOpened] = useState<number[]>([]);
+  const [logged, setLogged] = useState<boolean>(false);
+  const [measurementIntervalId, setMeasurementIntervalId] = useState<number | undefined>(undefined);
+  const [id, setId] = useState<number>(nextId++);
+  const [itemsPerRow, setItemsPerRow] = useState<number>(INITIAL_ITEMS_PER_ROW);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [isToggling, setIsToggling] = useState<boolean>(false);
 
-  constructor(props: ExpandableCardsProps) {
-    super(props);
-
-    this.state = {
-      id: nextId++,
-      itemsPerRow: INITIAL_ITEMS_PER_ROW,
-      openIndex: null,
-      toggling: false
-    };
-
-    this.itemsOpened = [];
-    this.logged = false;
-
-    this.measureBase = this.measureBase.bind(this);
-    this.sendLog = this.sendLog.bind(this);
-  }
-
-  sendLog() {
-    if (this.logged || typeof navigator.sendBeacon === 'undefined') {
-      return;
+  // TODO: this should be observed in a way that doesn't involve intervals.
+  const measureBase = () => {
+    const width = baseRef.current.offsetWidth;
+    if (width >= 1480) {
+      setItemsPerRow(6);
+    } else if (width >= 1200) {
+      setItemsPerRow(5);
+    } else if (width >= 940) {
+      setItemsPerRow(4);
+    } else if (width >= 480) {
+      setItemsPerRow(3);
+    } else if (width >= 240) {
+      setItemsPerRow(2);
+    } else {
+      setItemsPerRow(1);
     }
-    this.logged = true;
+  };
+
+  // TODO: remove logging
+  const sendLog = () => {
+    // Don't continue if recently logged or can't log
+    if (logged || typeof navigator.sendBeacon === 'undefined') return;
+
+    setLogged(true);
     var now = new Date();
     var idMatches = document.URL.match(/\d{5,}/);
-    var openedUnique = new Set(this.itemsOpened);
+    var openedUnique = new Set(itemsOpened);
     var firestoreURL = `https://firestore.googleapis.com/v1beta1/projects/interactive-expandable-cards/databases/(default)/documents/view/`;
     var firestoreData = {
       fields: {
@@ -71,14 +78,14 @@ export class ExpandableCards extends Component<ExpandableCardsProps, ExpandableC
           doubleValue: (window.performance.timing.domComplete - window.performance.timing.navigationStart) / 1000
         },
         timeOnPage: { doubleValue: (now.getTime() - window.performance.timing.domComplete) / 1000 },
-        itemsTotal: { integerValue: this.props.items.length },
-        itemsPerRow: { integerValue: this.state.itemsPerRow },
-        itemsOpened: { integerValue: this.itemsOpened.length },
+        itemsTotal: { integerValue: items.length },
+        itemsPerRow: { integerValue: itemsPerRow },
+        itemsOpened: { integerValue: itemsOpened.length },
         itemsOpenedUnique: { integerValue: openedUnique.size },
-        itemsOpenedPct: { doubleValue: (openedUnique.size / this.props.items.length) * 100 },
+        itemsOpenedPct: { doubleValue: (openedUnique.size / items.length) * 100 },
         itemsOpenedArray: {
           arrayValue: {
-            values: this.itemsOpened.map(x => ({ integerValue: x }))
+            values: itemsOpened.map(x => ({ integerValue: x }))
           }
         },
         itemsOpenedArrayUnique: {
@@ -89,13 +96,31 @@ export class ExpandableCards extends Component<ExpandableCardsProps, ExpandableC
       }
     };
     navigator.sendBeacon(firestoreURL, JSON.stringify(firestoreData));
-  }
+  };
 
-  componentDidMount() {
+  useEffect(() => {
+    measureBase();
+    setMeasurementIntervalId(window.setInterval(measureBase, 250));
+    // TODO: This should not use beforeunload and unload events. See: https://kapeli.com/dash_share?docset_file=JavaScript&docset_name=JavaScript&path=developer.mozilla.org/en-US/docs/Web/API/navigator/sendBeacon.html&platform=javascript&repo=Main&source=developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon
+    window.addEventListener('beforeunload', sendLog);
+    window.addEventListener('unload', sendLog);
+
+    return () => {
+      window.clearInterval(measurementIntervalId);
+      window.removeEventListener('beforeunload', sendLog);
+      window.removeEventListener('unload', sendLog);
+      sendLog();
+    };
+  }, []);
+
+  // TODO: Move this outside the component.
+  useLayoutEffect(() => {
     // Integrate with Odyssey
     const integrateWithOdyssey = () => {
-      this.baseRef.current.parentElement.classList.remove('u-richtext');
-      this.baseRef.current.parentElement.classList.add('u-pull');
+      if (baseRef.current.parentElement) {
+        baseRef.current.parentElement.classList.remove('u-richtext');
+        baseRef.current.parentElement.classList.add('u-pull');
+      }
     };
     if (window.__ODYSSEY__) {
       integrateWithOdyssey();
@@ -104,114 +129,81 @@ export class ExpandableCards extends Component<ExpandableCardsProps, ExpandableC
     }
 
     // Integrate with phase 1 mobile
-    if (this.baseRef.current.parentElement.className.indexOf('embed-wysiwyg') > -1) {
-      this.baseRef.current.parentElement.classList.add(styles.borderless);
+    if (baseRef.current.parentElement && baseRef.current.parentElement.className.indexOf('embed-wysiwyg') > -1) {
+      baseRef.current.parentElement.classList.add(styles.borderless);
     }
+  });
 
-    this.measureBase();
-    this.measurementIntervalId = window.setInterval(this.measureBase, 250);
-    window.addEventListener('beforeunload', this.sendLog);
-    window.addEventListener('unload', this.sendLog);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.measurementIntervalId);
-    window.removeEventListener('beforeunload', this.sendLog);
-    window.removeEventListener('unload', this.sendLog);
-    this.sendLog();
-  }
-
-  // TODO: this should be observed in a way that doesn't involve intervals.
-  measureBase() {
-    const width = this.baseRef.current.offsetWidth;
-    let itemsPerRow: number;
-
-    if (width >= 1480) {
-      itemsPerRow = 6;
-    } else if (width >= 1200) {
-      itemsPerRow = 5;
-    } else if (width >= 940) {
-      itemsPerRow = 4;
-    } else if (width >= 480) {
-      itemsPerRow = 3;
-    } else if (width >= 240) {
-      itemsPerRow = 2;
-    } else {
-      itemsPerRow = 1;
-    }
-
-    if (itemsPerRow !== this.state.itemsPerRow) {
-      this.setState({ itemsPerRow });
-    }
-  }
-
-  onNavigate(index, event) {
+  const onNavigate = (index: number, event: KeyboardEvent) => {
     let nextIndex = index;
 
+    // TODO: use KeyboardEvent.key instead: https://kapeli.com/dash_share?docset_file=JavaScript&docset_name=JavaScript&path=developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values.html&platform=javascript&repo=Main&source=developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values
     switch (event.keyCode) {
       case 37:
         nextIndex--;
         break;
       case 38:
-        nextIndex -= this.state.itemsPerRow;
+        nextIndex -= itemsPerRow;
         break;
       case 39:
         nextIndex++;
         break;
       case 40:
-        nextIndex += this.state.itemsPerRow;
+        nextIndex += itemsPerRow;
         break;
       default:
         nextIndex = -1;
         break;
     }
 
-    if (nextIndex > -1 && nextIndex < this.props.items.length) {
+    if (nextIndex > -1 && nextIndex < items.length) {
       event.preventDefault();
-      [...this.baseRef.current.querySelectorAll('[data-component="Control"]')].forEach((el, index) => {
+      Array.from(baseRef.current.querySelectorAll('[data-component="Control"]')).forEach((el, index) => {
         if (index === nextIndex) {
-          el.focus();
+          if (el instanceof HTMLElement) el.focus();
         }
       });
     }
-  }
+  };
 
-  onToggle(index) {
+  const onToggle = (index: number) => {
     // Don't toggle while toggling.
-    if (this.state.toggling) return;
+    if (isToggling) return;
 
-    if (this.state.openIndex === index) {
-      return this.setState({ openIndex: null });
-    } else if (this.state.openIndex === null) {
-      this.itemsOpened.push(index);
-      return this.setState({ openIndex: index });
+    if (openIndex === index) {
+      return setOpenIndex(null);
+    } else if (openIndex === null) {
+      setItemsOpened(itemsOpened.concat(index));
+      setOpenIndex(index);
+      return;
     }
 
-    this.setState({ toggling: true, openIndex: null });
+    setIsToggling(true);
+    setOpenIndex(null);
 
     setTimeout(() => {
-      this.itemsOpened.push(index);
-      this.setState({ openIndex: index, toggling: false });
+      setItemsOpened(itemsOpened.concat(index));
+      setOpenIndex(index);
+      setIsToggling(false);
     }, 250);
-  }
+  };
 
-  render({ items }: ExpandableCardsProps, { id, itemsPerRow, openIndex }: ExpandableCardsState) {
-    const categories = items.reduce<string[]>((memo, item) => {
-      if (item.label && memo.indexOf(item.label) < 0) {
-        memo.push(item.label);
-      }
-      return memo;
-    }, []);
+  const categories = items.reduce<string[]>((cats, item) => {
+    if (item.label && cats.indexOf(item.label) < 0) {
+      cats.push(item.label);
+    }
+    return cats;
+  }, []);
 
-    return (
-      <dl ref={this.baseRef} role="presentation" className={styles.root} data-component="ExpandableCards">
-        {items.reduce<HTMLDListElement[]>((memo, item, index) => {
-          const controlId = `ExpandableCards_${id}__Control_${index}`;
-          const regionId = `ExpandableCards_${id}__Region_${index}`;
-          const filterId = `ExpandableCards_${id}__Filter_${index}`;
-          const order = 1 + (index % itemsPerRow) + Math.floor(index / itemsPerRow) * itemsPerRow * 2;
-
-          return memo.concat([
+  return (
+    <dl ref={baseRef} role="presentation" className={styles.root} data-component="ExpandableCards">
+      {items.map((item, index) => {
+        const controlId = `ExpandableCards_${id}__Control_${index}`;
+        const regionId = `ExpandableCards_${id}__Region_${index}`;
+        const filterId = `ExpandableCards_${id}__Filter_${index}`;
+        const order = 1 + (index % itemsPerRow) + Math.floor(index / itemsPerRow) * itemsPerRow * 2;
+        return (
+          <Fragment>
             <dt
               key={controlId}
               role="heading"
@@ -228,16 +220,16 @@ export class ExpandableCards extends Component<ExpandableCardsProps, ExpandableC
                     : 0
                 }
                 image={item.image}
-                onNavigate={this.onNavigate.bind(this, index)}
-                onToggle={this.onToggle.bind(this, index)}
+                onNavigate={(ev: KeyboardEvent) => onNavigate(index, ev)}
+                onToggle={() => onToggle(index)}
                 open={index === openIndex}
                 regionId={regionId}
                 siblingsHaveLabels={categories.length > 0}
                 title={item.title}
                 filterId={filterId}
-                config={{ ...this.props.config, ...item.config }}
+                config={{ ...config, ...item.config }}
               />
-            </dt>,
+            </dt>
             <dd
               key={regionId}
               id={regionId}
@@ -248,9 +240,9 @@ export class ExpandableCards extends Component<ExpandableCardsProps, ExpandableC
             >
               <Detail nodes={item.detail} open={index === openIndex} />
             </dd>
-          ]);
-        }, [])}
-      </dl>
-    );
-  }
-}
+          </Fragment>
+        );
+      })}
+    </dl>
+  );
+};

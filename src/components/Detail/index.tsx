@@ -1,5 +1,6 @@
 import classNames from 'classnames';
-import { h, Component, createRef } from 'preact';
+import { h } from 'preact';
+import { useRef, useState, useEffect, useLayoutEffect } from 'preact/hooks';
 import styles from './styles.scss';
 
 type DetailProps = {
@@ -9,71 +10,63 @@ type DetailProps = {
 
 const TABBABLE_SELECTOR = '[href], button, input:not([type="hidden"]), select, textarea, [tabindex]';
 
-export class Detail extends Component<DetailProps> {
-  contentRef = createRef();
-  tabbable: { el: HTMLElement; initial: string }[] = [];
+export const Detail = ({ open, nodes }: DetailProps) => {
+  const contentRef = useRef<HTMLDivElement>();
+  const baseRef = useRef<HTMLDivElement>();
+  const [tabbable, setTabbable] = useState<{ el: Element; initial: string | null }[]>([]);
 
-  constructor(props: DetailProps) {
-    super(props);
-
-    this.toggleTabbable = this.toggleTabbable.bind(this);
-  }
-
-  animateHeightChange() {
-    if (this.base instanceof HTMLElement) {
-      const el = this.base;
-      el.style.height = `${this.contentRef.current.clientHeight}px`;
+  const animateHeightChange = () => {
+    if (baseRef.current instanceof HTMLElement) {
+      const el = baseRef.current;
+      el.style.height = `${contentRef.current.clientHeight}px`;
       setTimeout(
         () => {
-          el.style.height = this.props.open ? 'auto' : '0';
+          el.style.height = open ? 'auto' : '0';
         },
-        this.props.open ? 250 : 0
+        open ? 250 : 0
       );
     }
-  }
+  };
 
-  toggleTabbable() {
-    this.tabbable.forEach(x => {
-      if (this.props.open) {
-        if (x.initial === null) {
-          x.el.removeAttribute('tabindex');
-        } else {
-          x.el.setAttribute('tabindex', x.initial);
-        }
+  tabbable.forEach(x => {
+    if (open) {
+      if (x.initial === null) {
+        x.el.removeAttribute('tabindex');
       } else {
-        x.el.setAttribute('tabindex', '-1');
+        x.el.setAttribute('tabindex', x.initial);
       }
-    });
-  }
-
-  componentDidMount() {
-    this.props.nodes.forEach(node => {
-      this.contentRef.current.appendChild(node);
-    });
-
-    this.tabbable = [...this.contentRef.current.querySelectorAll(TABBABLE_SELECTOR)].map(el => ({
-      el,
-      initial: el.getAttribute('tabindex')
-    }));
-
-    this.animateHeightChange();
-    this.toggleTabbable();
-  }
-
-  componentDidUpdate({ open: wasPreviouslyOpen }) {
-    if (wasPreviouslyOpen === this.props.open) {
-      return;
+    } else {
+      x.el.setAttribute('tabindex', '-1');
     }
+  });
 
-    this.animateHeightChange();
-    this.toggleTabbable();
-  }
+  useEffect(() => {
+    nodes.forEach(node => {
+      contentRef.current.appendChild(node);
+    });
 
-  render() {
-    return (
-      <div className={classNames(styles.root, { [styles.open]: this.props.open })} data-component="Detail">
-        <div ref={this.contentRef} className={`${styles.content} u-richtext`} />
-      </div>
+    setTabbable(
+      Array.from(contentRef.current.querySelectorAll(TABBABLE_SELECTOR)).map(el => ({
+        el,
+        initial: el.getAttribute('tabindex')
+      }))
     );
-  }
-}
+
+    return () => {
+      while (contentRef.current.firstChild) {
+        contentRef.current.firstChild.remove();
+      }
+      setTabbable([]);
+    };
+  }, [nodes]);
+
+  useLayoutEffect(() => {
+    animateHeightChange();
+  }, [open]);
+
+  return (
+    <div ref={baseRef} className={classNames(styles.root, { [styles.open]: open })} data-component="Detail">
+      <div ref={contentRef} className={`${styles.content} u-richtext`} />
+    </div>
+  );
+};
