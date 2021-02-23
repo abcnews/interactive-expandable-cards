@@ -26,11 +26,11 @@
 		"@abcnews/aunty": "^11.3.0"
 	},
 	"dependencies": {
-		"@abcnews/alternating-case-to-object": "^2.0.1",
-		"@abcnews/env-utils": "^2.1.1",
+		"@abcnews/alternating-case-to-object": "^3.0.1",
+		"@abcnews/env-utils": "^2.1.2",
 		"@abcnews/mount-utils": "^2.0.0",
 		"classnames": "^2.2.6",
-		"core-js": "^3.8.3",
+		"core-js": "^3.9.0",
 		"preact": "^10.5.12",
 		"util-dewysiwyg": "git+ssh://git@stash.abc-dev.net.au:7999/news/util-dewysiwyg.git#3.8.0",
 		"util-news-selectors": "git+ssh://git@stash.abc-dev.net.au:7999/news/util-news-selectors.git#2.0.2"
