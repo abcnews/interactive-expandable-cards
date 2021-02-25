@@ -14,7 +14,7 @@ $radius: 0.125rem;
 // height is stretched to the natural height of its thumbnail image.
 // To work around this, we only declare display: flex on all other
 // browsers, using selector hacks (see below).
-.root {
+.card {
   overflow: visible;
   /* display: flex; */
   flex-direction: column;
@@ -52,12 +52,12 @@ $radius: 0.125rem;
 }
 // Use flexbox on Chrome, Edge, Opera & Safari
 @supports (-webkit-appearance: none) {
-  .root {
+  .card {
     display: flex;
   }
 }
 // Use flexbox on Firefox
-body:last-child .root,
+body:last-child .card,
 x:-moz-any-link {
   display: flex;
 }
@@ -209,9 +209,26 @@ x:-moz-any-link {
   }
 }
 
-.filter {
-  position: absolute;
-  opacity: 0;
-  width: 1px;
-  height: 1px;
+.of1 {
+  width: 100%;
+}
+
+.of2 {
+  width: 50%;
+}
+
+.of3 {
+  width: 33.33%;
+}
+
+.of4 {
+  width: 25%;
+}
+
+.of5 {
+  width: 20%;
+}
+
+.of6 {
+  width: 16.66%;
 }

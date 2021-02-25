@@ -23,7 +23,11 @@
 		"start": "aunty serve"
 	},
 	"devDependencies": {
-		"@abcnews/aunty": "^11.3.0"
+		"@abcnews/aunty": "^11.3.0",
+		"@types/jest": "^26.0.20",
+		"@types/webpack-env": "^1.16.0",
+		"html-looks-like": "^1.0.3",
+		"preact-render-to-string": "^5.1.12"
 	},
 	"dependencies": {
 		"@abcnews/alternating-case-to-object": "^3.0.1",

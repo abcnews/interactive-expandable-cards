@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { h } from 'preact';
+import { FunctionalComponent, h } from 'preact';
 import { useRef, useState, useEffect, useLayoutEffect } from 'preact/hooks';
 import styles from './styles.scss';
 
@@ -10,7 +10,7 @@ type DetailProps = {
 
 const TABBABLE_SELECTOR = '[href], button, input:not([type="hidden"]), select, textarea, [tabindex]';
 
-export const Detail = ({ open, nodes }: DetailProps) => {
+export const Detail: FunctionalComponent<DetailProps> = ({ open, nodes }) => {
   const contentRef = useRef<HTMLDivElement>();
   const baseRef = useRef<HTMLDivElement>();
   const [tabbable, setTabbable] = useState<{ el: Element; initial: string | null }[]>([]);
