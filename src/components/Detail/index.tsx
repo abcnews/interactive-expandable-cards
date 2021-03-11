@@ -14,18 +14,26 @@ export const Detail: FunctionalComponent<DetailProps> = ({ open, nodes }) => {
   const contentRef = useRef<HTMLDivElement>();
   const baseRef = useRef<HTMLDivElement>();
   const [tabbable, setTabbable] = useState<{ el: Element; initial: string | null }[]>([]);
+  const timeoutRef = useRef<number>();
 
-  const animateHeightChange = () => {
-    if (baseRef.current instanceof HTMLElement) {
-      const el = baseRef.current;
-      el.style.height = `${contentRef.current.clientHeight}px`;
-      setTimeout(
-        () => {
-          el.style.height = open ? 'auto' : '0';
-        },
-        open ? 250 : 0
-      );
-    }
+  const animateHeightChange = (el: HTMLElement) => {
+    el.style.height = `${contentRef.current.clientHeight}px`;
+    window.clearTimeout(timeoutRef.current);
+    timeoutRef.current = window.setTimeout(
+      () => {
+        el.style.height = open ? 'auto' : '0';
+      },
+      open ? 250 : 0
+    );
+  };
+
+  const fixImages = (el: HTMLElement) => {
+    const figsImages = Array.from(el.querySelectorAll<HTMLImageElement>('figure img'));
+    console.log('figsImages :>> ', figsImages);
+    figsImages.forEach(img => {
+      img.setAttribute('src', img.dataset.src || '');
+      img.dataset.nojs = 'false';
+    });
   };
 
   tabbable.forEach(x => {
@@ -61,7 +69,11 @@ export const Detail: FunctionalComponent<DetailProps> = ({ open, nodes }) => {
   }, [nodes]);
 
   useLayoutEffect(() => {
-    animateHeightChange();
+    const container = baseRef.current;
+    if (container instanceof HTMLElement) {
+      animateHeightChange(container);
+      fixImages(container);
+    }
   }, [open]);
 
   return (

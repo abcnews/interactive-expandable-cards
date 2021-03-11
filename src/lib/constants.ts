@@ -21,13 +21,20 @@ export const ACTO_PROP_MAP = {
   colour: 'colourDefault',
   color: 'colourDefault',
   tintphoto: 'tintPhoto',
-  tintphotos: 'tintPhoto'
+  tintphotos: 'tintPhoto',
+  tintimages: 'tintPhoto',
+  ratio: 'imageRatio'
 };
 export const ACTO_PROP_MAP_CARD = {
   colour: 'colourOverride',
   color: 'colourOverride',
   tintphoto: 'tintPhoto',
-  tintphotos: 'tintPhoto'
+  tintphotos: 'tintPhoto',
+  tintimages: 'tintPhoto'
 };
 
 export const TITLE_SCROLL_MARGIN = 48;
+
+export const TERMINUS_KEY = '***REMOVED***';
+
+export const DEFAULT_IMAGE_RATIO = '3x2';

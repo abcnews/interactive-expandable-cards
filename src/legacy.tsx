@@ -5,13 +5,11 @@ import dewysiwyg from 'util-dewysiwyg';
 import ns from 'util-news-selectors';
 import { isMount, getMountValue } from '@abcnews/mount-utils';
 
-import { ExpandableCards, ExpandableCardsColourMap } from './components/ExpandableCards';
+import { ExpandableCards, ExpandableCardsColourMap, ExpandableCardsImage } from './components/ExpandableCards';
 import type { ExpandableCardsItem } from './components/ExpandableCards';
-import { getConfig, getItemConfig } from './lib/utils';
+import { getConfig, getItemConfig, isTitle, parseTitle } from './lib/utils';
+import { getApplication } from '@abcnews/env-utils';
 
-const LABEL_DELIMETER = ': ';
-const LABEL_REGEX = /^([^:]*)/;
-const TITLE_MINUS_LABEL_REGEX = /:\s+(.*)/;
 const IMAGE_DIMENSIONS_SRC_SEGMENT_REGEX = /\d+x\d+-\d+x\d+/;
 const THREE_TWO_IMAGE_SRC_SEGMENT = '3x2-460x307';
 const P2_IMAGE_DIMENSIONS_SRC_SEGMENT_REGEX = /\d+x\d+-thumbnail/;
@@ -32,20 +30,11 @@ const toItems = (availableColours: ExpandableCardsColourMap) => (
 
   const headingEl = nodes.shift();
 
-  let title = headingEl?.textContent;
-
-  if (title === null || typeof title === 'undefined' || title.replace(' ', '').length === 0) {
+  if (!isTitle(headingEl)) {
     return null;
   }
 
-  let label: string | null = null;
-
-  if (title.indexOf(LABEL_DELIMETER) > -1) {
-    const labelMatch = title.match(LABEL_REGEX);
-    const titleMatch = title.match(TITLE_MINUS_LABEL_REGEX);
-    label = labelMatch ? labelMatch[1] : null;
-    title = titleMatch ? titleMatch[1] : '';
-  }
+  const { title, label } = parseTitle(headingEl.textContent || '');
 
   let imgEl: HTMLElement | null | undefined = section?.shift();
 
@@ -58,16 +47,21 @@ const toItems = (availableColours: ExpandableCardsColourMap) => (
     imgEl = prev instanceof HTMLElement ? prev : null;
   }
 
-  let image: string | null = null;
+  var image: ExpandableCardsImage | null = null;
 
   if (imgEl) {
-    image = (imgEl.getAttribute('src') || imgEl.getAttribute('srcset') || imgEl.getAttribute('data-srcset') || '')
+    const url = (imgEl.getAttribute('src') || imgEl.getAttribute('srcset') || imgEl.getAttribute('data-srcset') || '')
       .replace(IMAGE_DIMENSIONS_SRC_SEGMENT_REGEX, THREE_TWO_IMAGE_SRC_SEGMENT)
       .replace(P2_IMAGE_DIMENSIONS_SRC_SEGMENT_REGEX, P2_THREE_TWO_IMAGE_SRC_SEGMENT);
+    const alt = imgEl.getAttribute('alt');
+    if (typeof alt === 'string' && typeof url === 'string') {
+      image = { alt, url, renditions: [] };
+    }
   }
 
   const detail = section.filter(el => el.textContent !== ' ' || el.tagName === 'A');
   const itemConfig = getItemConfig(itemConfigString, availableColours);
+
   return { label, image, title, detail, ...itemConfig };
 };
 
@@ -107,6 +101,7 @@ const splitIntoSections = (teaserEl: HTMLElement) => {
 
 export const init = () => {
   const BEACON_NAME = 'interactive-expandable-cards';
+  const platform = getApplication();
   const PLATFORM = {
     '-1': 'p1m',
     0: 'p2',
@@ -116,7 +111,7 @@ export const init = () => {
       +(document.body.className.indexOf('platform-mobile') > -1)
   ];
   const EMBED_WYSIWYG_SELECTOR = ns('embed:wysiwyg', PLATFORM);
-  const EMBED_FULL_CLASS_NAME = { p1s: 'full', p1m: '', p2: 'view-embed-full' }[PLATFORM];
+  const EMBED_FULL_CLASS_NAME = { p1s: 'full', p1m: '', p2: 'view-embed-full' }[PLATFORM || ''];
   const MOCK_TEASER_OUTER_CLASS_NAME = (EMBED_WYSIWYG_SELECTOR.split(' ')[0] + ' ' + EMBED_FULL_CLASS_NAME).replace(
     /\./g,
     ' '

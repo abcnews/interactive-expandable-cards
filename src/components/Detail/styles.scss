@@ -15,7 +15,7 @@
     transition: opacity 0.25s cubic-bezier(0.645, 0.045, 0.355, 1), transform 0.25s cubic-bezier(0.645, 0.045, 0.355, 1),
       height 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
 
-    div {
+    > div {
       margin-left: 0;
       margin-right: 0;
       padding-bottom: 2.5rem;
