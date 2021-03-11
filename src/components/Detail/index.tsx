@@ -29,7 +29,6 @@ export const Detail: FunctionalComponent<DetailProps> = ({ open, nodes }) => {
 
   const fixImages = (el: HTMLElement) => {
     const figsImages = Array.from(el.querySelectorAll<HTMLImageElement>('figure img'));
-    console.log('figsImages :>> ', figsImages);
     figsImages.forEach(img => {
       img.setAttribute('src', img.dataset.src || '');
       img.dataset.nojs = 'false';
