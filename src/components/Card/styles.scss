@@ -73,7 +73,9 @@ x:-moz-any-link {
   padding: 0.3125rem 0.5rem;
   border-radius: $radius $radius 0 0;
   background-color: $bgActiveFallback;
+  background-color: var(--card-heading-bg);
   color: #fff;
+  color: var(--card-heading-text);
   font-size: 1rem;
   line-height: 1.1875rem;
   text-transform: uppercase;
