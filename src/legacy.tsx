@@ -174,7 +174,7 @@ export const init = () => {
 
     beaconEl.parentElement && beaconEl.parentElement.removeChild(beaconEl);
 
-    const config = getConfig(beaconEl.getAttribute('data-config') || '');
+    const config = getConfig((beaconEl.getAttribute('data-config') || '') + 'COLOURDEFAULT01cfff');
 
     if (!window.__ODYSSEY__) {
       dewysiwyg.normalise(teaserEl);
