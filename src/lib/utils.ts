@@ -8,7 +8,6 @@ import {
   ExpandableCardsColourMap,
   ExpandableCardsConfig,
   ExpandableCardsItemConfig,
-  ExpandableCardsImageRendition,
   ExpandableCardsImage
 } from '../components/ExpandableCards';
 
@@ -21,14 +20,6 @@ export type RGB = {
   g: number;
   b: number;
 };
-
-enum ImageRatios {
-  '1x1' = '1x1',
-  '3x2' = '3x2',
-  '3x4' = '3x4',
-  '4x3' = '4x3',
-  '16x9' = '16x9'
-}
 
 export const getItemConfig = (str: string, availableColours: ExpandableCardsColourMap) => {
   const actos = acto(str, { propMap: ACTO_PROP_MAP_CARD });
@@ -146,4 +137,13 @@ export const getEmbeddedImageData = async (id: string) => {
       return images;
     }
   }, {});
+};
+
+export const slug = (str: string) => {
+  return str
+    .replace(/\s/g, '-')
+    .replace(/[()=:.,!#$@"'/\|?*+&]/g, '')
+    .replace(/^-+|-+$/g, '')
+    .replace(/-+/g, '-')
+    .toLowerCase();
 };

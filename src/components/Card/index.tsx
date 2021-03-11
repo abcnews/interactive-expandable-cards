@@ -2,7 +2,7 @@ import { h, FunctionalComponent, Fragment } from 'preact';
 import classNames from 'classnames';
 import { Detail } from '../Detail';
 import styles from './styles.scss';
-import { blackOrWhiteText, hexToRGB, rgbGamma } from '../../lib/utils';
+import { blackOrWhiteText, hexToRGB, slug } from '../../lib/utils';
 import { useEffect, useRef } from 'preact/hooks';
 import { TITLE_SCROLL_MARGIN } from '../../lib/constants';
 import CardImage from '../CardImage';
@@ -87,7 +87,7 @@ const Card: FunctionalComponent<CardProps> = ({
           {label ? (
             <div
               className={classNames(styles.label, { [styles.long]: label.length > 12 })}
-              style={{ backgroundColor: cardColour, color: textColour }} // in case CSS variables don't work (e.g. Internet Explorer)
+              data-expandable-cards-label={slug(label)}
             >
               {label}
             </div>
