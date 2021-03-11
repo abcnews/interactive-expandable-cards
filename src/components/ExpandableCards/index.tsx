@@ -7,6 +7,7 @@ import styles from './styles.scss';
 export type ExpandableCardsConfig = {
   defaultShouldTintPhoto: boolean;
   defaultCardColour: string;
+  defaultImageRatio: string;
   availableColours: ExpandableCardsColourMap;
 };
 
@@ -15,10 +16,22 @@ export type ExpandableCardsItemConfig = {
   shouldTintPhoto?: boolean;
 };
 
+export type ExpandableCardsImageRendition = {
+  url: string;
+  width: number;
+  ratio: string;
+};
+
+export type ExpandableCardsImage = {
+  alt: string;
+  url: string;
+  renditions: ExpandableCardsImageRendition[];
+};
+
 export type ExpandableCardsItem = {
   title: string;
   label: string | null;
-  image: string | null;
+  image: ExpandableCardsImage | null;
   detail: HTMLElement[];
 } & ExpandableCardsItemConfig;
 
@@ -43,7 +56,6 @@ export const ExpandableCards: FunctionalComponent<ExpandableCardsProps> = ({
   availableColours
 }) => {
   const baseRef = useRef<HTMLDListElement>();
-  const [itemsOpened, setItemsOpened] = useState<number[]>([]);
   const [measurementIntervalId, setMeasurementIntervalId] = useState<number | undefined>(undefined);
   const [instanceId] = useState<number>(nextInstanceId++);
   const [itemsPerRow, setItemsPerRow] = useState<number>(2);
@@ -77,7 +89,6 @@ export const ExpandableCards: FunctionalComponent<ExpandableCardsProps> = ({
     };
   }, []);
 
-  // TODO: Move this outside the component.
   useLayoutEffect(() => {
     // Integrate with Odyssey
     const integrateWithOdyssey = () => {
@@ -136,7 +147,6 @@ export const ExpandableCards: FunctionalComponent<ExpandableCardsProps> = ({
     if (openIndex === index) {
       return setOpenIndex(null);
     } else if (openIndex === null) {
-      setItemsOpened(itemsOpened.concat(index));
       setOpenIndex(index);
       return;
     }
@@ -145,7 +155,6 @@ export const ExpandableCards: FunctionalComponent<ExpandableCardsProps> = ({
     setOpenIndex(null);
 
     setTimeout(() => {
-      setItemsOpened(itemsOpened.concat(index));
       setOpenIndex(index);
       setIsToggling(false);
     }, 250);
@@ -170,8 +179,9 @@ export const ExpandableCards: FunctionalComponent<ExpandableCardsProps> = ({
             label={label}
             image={image}
             detail={detail}
+            siblingsHaveLabels={!!items.find(d => d.label !== null && String(d.label).length > 0)}
             colour={cardColour || getColourFromLabel(label, availableColours)}
-            tint={shouldTintPhoto !== undefined ? shouldTintPhoto : defaultShouldTintPhoto}
+            shouldTintPhoto={shouldTintPhoto !== undefined ? shouldTintPhoto : defaultShouldTintPhoto}
             itemsPerRow={itemsPerRow}
             isOpen={index === openIndex}
             onToggle={() => onToggle(index)}

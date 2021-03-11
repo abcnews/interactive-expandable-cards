@@ -5,18 +5,20 @@ import styles from './styles.scss';
 import { blackOrWhiteText, hexToRGB, rgbGamma } from '../../lib/utils';
 import { useEffect, useRef } from 'preact/hooks';
 import { TITLE_SCROLL_MARGIN } from '../../lib/constants';
-import GammaFilter from '../GammaFilter';
+import CardImage from '../CardImage';
+import { ExpandableCardsImage } from '../ExpandableCards';
 
 type CardProps = {
   instance: number;
   index: number;
   title: string;
-  image: string | null;
+  image: ExpandableCardsImage | null;
   label: string | null;
   detail: HTMLElement[];
   colour: string;
-  tint: boolean;
+  shouldTintPhoto: boolean;
   isOpen: boolean;
+  siblingsHaveLabels: boolean;
   onNavigate: (event: KeyboardEvent) => void;
   onToggle: () => void;
   itemsPerRow: number;
@@ -29,16 +31,16 @@ const Card: FunctionalComponent<CardProps> = ({
   image,
   label,
   detail,
-  colour,
-  tint,
+  colour: cardColour,
+  shouldTintPhoto,
   isOpen,
+  siblingsHaveLabels,
   onNavigate,
   onToggle,
   itemsPerRow
 }) => {
   const controlId = `ExpandableCards_${instance}__Control_${index}`;
   const regionId = `ExpandableCards_${instance}__Region_${index}`;
-  const filterId = `ExpandableCards_${instance}__Filter_${index}`;
   const order = 1 + (index % itemsPerRow) + Math.floor(index / itemsPerRow) * itemsPerRow * 2;
 
   const toggleRef = useRef<HTMLDivElement>();
@@ -58,14 +60,8 @@ const Card: FunctionalComponent<CardProps> = ({
 
   const matches = title.match(/(.*)\((.*)\)(.*)?/); // Does the title contain braces?
   const titleChildren = matches ? [matches[1], <span>{matches[2]}</span>, matches[3] || ''] : title;
-
-  const bgRGB = hexToRGB(colour);
-  const bgRGBGamma = rgbGamma(bgRGB);
-  const textColour = blackOrWhiteText(bgRGB);
-  const filterCSS = tint === true ? `grayscale(100%) url(#${filterId})` : undefined;
-
-  // TODO: Investigate and reinstate this functionality
-  const siblingsHaveLabels = true;
+  const cardColourRGB = hexToRGB(cardColour);
+  const textColour = blackOrWhiteText(cardColourRGB);
 
   return (
     <Fragment>
@@ -79,28 +75,26 @@ const Card: FunctionalComponent<CardProps> = ({
           id={controlId}
           aria-controls={regionId}
           aria-expanded={isOpen ? 'true' : 'false'}
-          className={classNames(styles.card, { [styles.open]: open, [styles.siblingsHaveLabels]: siblingsHaveLabels })}
+          className={classNames(styles.card, {
+            [styles.open]: isOpen,
+            [styles.siblingsHaveLabels]: siblingsHaveLabels
+          })}
           onClick={onToggle}
           onKeyDown={onNavigate}
-          style={{ '--card-heading-bg': colour, '--card-heading-text': textColour }}
+          style={{ '--card-heading-bg': cardColour, '--card-heading-text': textColour }}
           data-component="Control"
         >
           {label ? (
             <div
               className={classNames(styles.label, { [styles.long]: label.length > 12 })}
-              style={{ backgroundColor: colour, color: textColour }} // in case CSS variables don't work (e.g. Internet Explorer)
+              style={{ backgroundColor: cardColour, color: textColour }} // in case CSS variables don't work (e.g. Internet Explorer)
             >
               {label}
             </div>
           ) : null}
-          {image ? (
-            <div className={styles.image} role="presentation">
-              <img src={image} style={{ filter: filterCSS, '-webkit-filter': filterCSS }} />
-            </div>
-          ) : null}
+          {image && <CardImage image={image} tint={shouldTintPhoto && cardColourRGB} />}
           <div class={styles.title}>{titleChildren}</div>
           <div ref={toggleRef} class={styles.toggle} role="presentation" />
-          <GammaFilter id={filterId} exponents={bgRGBGamma} />
         </button>
       </dt>
       <dd
@@ -108,6 +102,7 @@ const Card: FunctionalComponent<CardProps> = ({
         role="region"
         aria-hidden={isOpen ? 'false' : 'true'}
         aria-labelledby={controlId}
+        className={styles.details}
         style={{ order: order + itemsPerRow, '-webkit-order': order + itemsPerRow }}
       >
         <Detail nodes={detail} open={isOpen} />
