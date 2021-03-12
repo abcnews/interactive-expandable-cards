@@ -81,3 +81,5 @@ export const Detail: FunctionalComponent<DetailProps> = ({ open, nodes }) => {
     </div>
   );
 };
+
+export default Detail;

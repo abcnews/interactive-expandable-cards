@@ -6,7 +6,6 @@ import styles from './styles.scss';
 
 export type ExpandableCardsConfig = {
   defaultShouldTintPhoto: boolean;
-  defaultCardColour: string;
   defaultImageRatio: string;
   availableColours: ExpandableCardsColourMap;
 };
@@ -44,15 +43,12 @@ type ExpandableCardsProps = {
   items: ExpandableCardsItem[];
 } & ExpandableCardsConfig;
 
-const MAX_ALLOWED_CATEGORIES = 6;
-
 // Global variable for uniquely identifying multiple instances of the ExpandableCards component.
 let nextInstanceId = 0;
 
 export const ExpandableCards: FunctionalComponent<ExpandableCardsProps> = ({
   items,
   defaultShouldTintPhoto,
-  defaultCardColour,
   availableColours
 }) => {
   const baseRef = useRef<HTMLDListElement>();

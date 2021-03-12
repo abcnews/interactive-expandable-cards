@@ -5,7 +5,7 @@ import CardImage from '.';
 
 describe('CardImage', () => {
   test('It renders', () => {
-    const actual = render(<CardImage image={{ alt: 'Alt', url: 'url', renditions: [] }} tint={{ r: 1, g: 1, b: 1 }} />);
+    const actual = render(<CardImage image={{ alt: 'Alt', url: 'url', renditions: [] }} tint={false} />);
     expect(actual).toMatchSnapshot();
   });
 });
