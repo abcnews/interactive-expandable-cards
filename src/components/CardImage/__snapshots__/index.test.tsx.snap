@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CardImage It renders 1`] = `"<figure role=\\"presentation\\"><img alt=\\"Alt\\" src=\\"url\\" srcset sizes=\\"(min-width: 1200px) 180px, (max-width: 1200px; min-width: 992px) 145px, 210px\\" /></figure>"`;

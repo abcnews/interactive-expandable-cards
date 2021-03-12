@@ -1,0 +1,25 @@
+.image {
+  margin: 0.5rem -0.25rem 0;
+
+  @media (min-width: 40rem) {
+    margin: 0.75rem 0 0;
+  }
+
+  &:first-child {
+    margin-top: 0;
+
+    .siblingsHaveLabels > & {
+      margin-top: 1.5rem;
+
+      @media (min-width: 40rem) {
+        margin-top: 1.75rem;
+      }
+    }
+  }
+
+  & > img {
+    max-width: 100%;
+    height: auto;
+    vertical-align: top;
+  }
+}
