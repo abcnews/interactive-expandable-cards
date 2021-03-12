@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Detail It renders 1`] = `"<div class data-component=\\"Detail\\"><div class=\\"undefined u-richtext\\"></div></div>"`;
