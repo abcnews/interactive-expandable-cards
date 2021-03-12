@@ -6,6 +6,7 @@ import styles from './styles.scss';
 
 export type ExpandableCardsConfig = {
   defaultShouldTintPhoto: boolean;
+  defaultCardColour: string;
   defaultImageRatio: string;
   availableColours: ExpandableCardsColourMap;
 };
@@ -155,13 +156,6 @@ export const ExpandableCards: FunctionalComponent<ExpandableCardsProps> = ({
       setIsToggling(false);
     }, 250);
   };
-
-  const categories = items.reduce<string[]>((cats, item) => {
-    if (item.label && cats.indexOf(item.label) < 0) {
-      cats.push(item.label);
-    }
-    return cats;
-  }, []);
 
   return (
     <dl ref={baseRef} role="presentation" className={styles.root} data-component="ExpandableCards">

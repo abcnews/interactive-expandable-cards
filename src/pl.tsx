@@ -12,11 +12,6 @@ import { requestDOMPermit } from '@abcnews/env-utils';
 import { getMountValue, isMount } from '@abcnews/mount-utils';
 import { DEFAULT_IMAGE_RATIO } from './lib/constants';
 
-type EventDetail = {
-  key: string;
-  active?: boolean;
-};
-
 type ExpandableCardsItemCollector = {
   cards: ExpandableCardsItem[];
   next?: ExpandableCardsItem;
