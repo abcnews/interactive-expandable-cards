@@ -97,10 +97,8 @@ export const init = async () => {
   const id = document.querySelector('meta[name=ContentId]')?.getAttribute('content');
   embeddedImageDataPromise = id ? getEmbeddedImageData(id) : Promise.resolve({});
 
-  const instances = await requestDOMPermit(DECOY_KEY, () => {
-    // TODO: is just trying to re-init an appropriate response to deactivation of a decoy?
-    init();
-  });
+  // TODO: is just trying to re-init an appropriate response to deactivation of a decoy?
+  const instances = await requestDOMPermit(DECOY_KEY, init);
   instances !== true &&
     instances.forEach(async el => {
       el.dataset['used'] = 'true';
