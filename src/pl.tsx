@@ -9,6 +9,7 @@ import {
 import { getConfig, getEmbeddedImageData, getItemConfig, isImage, isTitle, parseTitle } from './lib/utils';
 import type { TerminusImageData } from './lib/utils';
 import { requestDOMPermit } from '@abcnews/env-utils';
+import url2cmid from '@abcnews/url2cmid';
 import { getMountValue, isMount } from '@abcnews/mount-utils';
 import { DEFAULT_IMAGE_RATIO } from './lib/constants';
 
@@ -94,17 +95,27 @@ const parseDOM = async (el: HTMLElement, availableColours: ExpandableCardsColour
 
 export const init = async () => {
   // Fire of a request for the embedded image data ASAP.
-  const id = document.querySelector('meta[name=ContentId]')?.getAttribute('content');
-  embeddedImageDataPromise = id ? getEmbeddedImageData(id) : Promise.resolve({});
+  const id =
+    document.querySelector('meta[name=ContentId]')?.getAttribute('content') || url2cmid(document.location.href);
+
+  if (!id) {
+    return console.error(new Error('Content ID could not be determined'));
+  }
+
+  embeddedImageDataPromise = getEmbeddedImageData(id);
 
   // TODO: is just trying to re-init an appropriate response to deactivation of a decoy?
   const instances = await requestDOMPermit(DECOY_KEY, init);
-  instances !== true &&
-    instances.forEach(async el => {
-      el.dataset['used'] = 'true';
-      const config = getConfig(el.dataset?.tag || '');
-      const items = await parseDOM(el, config.availableColours, config.defaultImageRatio);
-      el.textContent = null;
-      render(<ExpandableCards {...config} items={items} />, el);
-    });
+
+  if (instances === true) {
+    return console.error(new Error('requestDOMPermit thinks this is not PL'));
+  }
+
+  instances.forEach(async el => {
+    el.dataset['used'] = 'true';
+    const config = getConfig(el.dataset?.tag || '');
+    const items = await parseDOM(el, config.availableColours, config.defaultImageRatio);
+    el.textContent = null;
+    render(<ExpandableCards {...config} items={items} />, el);
+  });
 };
