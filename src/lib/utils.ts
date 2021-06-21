@@ -109,12 +109,7 @@ export const parseTitle = (text: string): { title: string; label: string | null 
 
 // Image functions are only relevant to the PL implementation
 export const isImage = (el: unknown): el is HTMLElement =>
-  typeof el !== 'undefined' &&
-  el instanceof HTMLElement &&
-  el.tagName === 'FIGURE' &&
-  el.getAttribute('id') !== null &&
-  el.getAttribute('id')?.length !== 0 &&
-  el.children.length > 0;
+  typeof el !== 'undefined' && el instanceof HTMLElement && el.tagName === 'FIGURE' && el.children.length > 0;
 
 export const getEmbeddedImageData = async (id: string) => {
   const { _embedded } = await fetchOne({

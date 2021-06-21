@@ -54,11 +54,6 @@ describe('isImage', () => {
     expect(isImage(figure)).toBe(false);
   });
 
-  test('should fail for a figure without an ID attribute', () => {
-    const figure = addImage(getFigure(), { src: 'yes' });
-    expect(isImage(figure)).toBe(false);
-  });
-
   test('should fail for elements other than figure', () => {
     const other = document.createElement('h3');
     other.setAttribute('id', '123');
