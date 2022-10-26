@@ -29,29 +29,29 @@ const parseImage = async (el: HTMLElement, defaultImageRatio: string) => {
   const alt = img?.getAttribute('alt');
   const url = img?.dataset.src || img?.getAttribute('src');
 
-  if (typeof id !== 'undefined' && typeof alt === 'string' && typeof url === 'string') {
-    const image: ExpandableCardsImage = { alt, url, renditions: [] };
-    const embeddedImageData = await embeddedImageDataPromise;
-    const availableRenditions = embeddedImageData[id].renditions;
+  if (typeof id === 'undefined' || typeof alt !== 'string' || typeof url !== 'string') {
+    return null;
+  }
 
-    // If there are no renditions, just return what we've got.
-    if (availableRenditions.length === 0) {
-      return image;
-    }
+  const image: ExpandableCardsImage = { alt, url, renditions: [] };
+  const embeddedImageData = await embeddedImageDataPromise;
+  const availableRenditions = embeddedImageData[id].renditions;
 
-    // Try to find the requested ratio
-    const ratios = [defaultImageRatio, DEFAULT_IMAGE_RATIO, availableRenditions[0].ratio];
-
-    while (image.renditions.length === 0) {
-      const ratio = ratios.shift();
-
-      image.renditions = availableRenditions.filter(d => d.ratio === ratio);
-    }
-
+  // If there are no renditions, just return what we've got.
+  if (availableRenditions.length === 0) {
     return image;
   }
 
-  return null;
+  // Try to find the requested ratio
+  const ratios = [defaultImageRatio, DEFAULT_IMAGE_RATIO, availableRenditions[0].ratio];
+
+  while (image.renditions.length === 0) {
+    const ratio = ratios.shift();
+
+    image.renditions = availableRenditions.filter(d => d.ratio === ratio);
+  }
+
+  return image;
 };
 
 const parseDOM = async (el: HTMLElement, availableColours: ExpandableCardsColourMap, defaultImageRatio: string) => {
