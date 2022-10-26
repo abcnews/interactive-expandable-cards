@@ -1,5 +1,6 @@
 import 'regenerator-runtime';
 import { h, render } from 'preact';
+import { createImage } from './components/Detail/utils';
 import {
   ExpandableCards,
   ExpandableCardsColourMap,
@@ -70,14 +71,23 @@ const parseDOM = async (el: HTMLElement, availableColours: ExpandableCardsColour
         return collector;
       }
 
-      // If this is an image (and we're already collecting and there isn't already an image on this card)
-      if (collector.next && !collector.next?.image && isImage(child)) {
+      // If this is an image (and we're already collecting)
+      if (collector.next && isImage(child)) {
         const image = await parseImage(child, defaultImageRatio);
 
-        if (image !== null) {
-          collector.next.image = image;
+        if (image === null) {
           return collector;
         }
+
+        // If there isn't already an image on this card
+        if (!collector.next.image) {
+          collector.next.image = image;
+        } else {
+          // Otherwise, this defines image content, so push one into the details.
+          collector.next?.detail.push(createImage(image));
+        }
+
+        return collector;
       }
 
       // Card config
