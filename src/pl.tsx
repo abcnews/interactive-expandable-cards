@@ -22,6 +22,38 @@ const DECOY_KEY = 'cards';
 
 let embeddedImageDataPromise: Promise<TerminusImageData>;
 
+const parseImage = async (el: HTMLElement, defaultImageRatio: string) => {
+  const uri = el.dataset.uri;
+  const id = uri && uri.substr(uri.lastIndexOf('/') + 1);
+  const img = el.querySelector('img');
+  const alt = img?.getAttribute('alt');
+  const url = img?.dataset.src || img?.getAttribute('src');
+
+  if (typeof id !== 'undefined' && typeof alt === 'string' && typeof url === 'string') {
+    const image: ExpandableCardsImage = { alt, url, renditions: [] };
+    const embeddedImageData = await embeddedImageDataPromise;
+    const availableRenditions = embeddedImageData[id].renditions;
+
+    // If there are no renditions, just return what we've got.
+    if (availableRenditions.length === 0) {
+      return image;
+    }
+
+    // Try to find the requested ratio
+    const ratios = [defaultImageRatio, DEFAULT_IMAGE_RATIO, availableRenditions[0].ratio];
+
+    while (image.renditions.length === 0) {
+      const ratio = ratios.shift();
+
+      image.renditions = availableRenditions.filter(d => d.ratio === ratio);
+    }
+
+    return image;
+  }
+
+  return null;
+};
+
 const parseDOM = async (el: HTMLElement, availableColours: ExpandableCardsColourMap, defaultImageRatio: string) => {
   const children = Array.from(el.children);
 
@@ -40,29 +72,9 @@ const parseDOM = async (el: HTMLElement, availableColours: ExpandableCardsColour
 
       // If this is an image (and we're already collecting and there isn't already an image on this card)
       if (collector.next && !collector.next?.image && isImage(child)) {
-        const uri = child.dataset.uri;
-        const id = uri && uri.substr(uri.lastIndexOf('/') + 1);
-        const img = child.querySelector('img');
-        const alt = img?.getAttribute('alt');
-        const url = img?.dataset.src || img?.getAttribute('src');
-        if (typeof id !== 'undefined' && typeof alt === 'string' && typeof url === 'string') {
-          const image: ExpandableCardsImage = { alt, url, renditions: [] };
-          const embeddedImageData = await embeddedImageDataPromise;
-          const availableRenditions = embeddedImageData[id].renditions;
+        const image = await parseImage(child, defaultImageRatio);
 
-          // If there are no renditions, just return what we've got.
-          if (availableRenditions.length === 0) {
-            collector.next.image = image;
-            return collector;
-          }
-
-          // Try to find the requested ratio
-
-          const ratios = [defaultImageRatio, DEFAULT_IMAGE_RATIO, availableRenditions[0].ratio];
-          while (image.renditions.length === 0) {
-            const ratio = ratios.shift();
-            image.renditions = availableRenditions.filter(d => d.ratio === ratio);
-          }
+        if (image !== null) {
           collector.next.image = image;
           return collector;
         }
