@@ -12,7 +12,7 @@ import type { TerminusImageData } from './lib/utils';
 import { requestDOMPermit } from '@abcnews/env-utils';
 import url2cmid from '@abcnews/url2cmid';
 import { getMountValue, isMount } from '@abcnews/mount-utils';
-import { DEFAULT_IMAGE_RATIO } from './lib/constants';
+import { DEFAULT_IMAGE_RATIO, DETAIL_IMAGE_RATIO } from './lib/constants';
 
 type ExpandableCardsItemCollector = {
   cards: ExpandableCardsItem[];
@@ -73,18 +73,18 @@ const parseDOM = async (el: HTMLElement, availableColours: ExpandableCardsColour
 
       // If this is an image (and we're already collecting)
       if (collector.next && isImage(child)) {
-        const image = await parseImage(child, defaultImageRatio);
-
-        if (image === null) {
-          return collector;
-        }
-
         // If there isn't already an image on this card
         if (!collector.next.image) {
-          collector.next.image = image;
+          const image = await parseImage(child, defaultImageRatio);
+          if (image !== null) {
+            collector.next.image = image;
+          }
         } else {
           // Otherwise, this defines image content, so push one into the details.
-          collector.next?.detail.push(createImage(image));
+          const image = await parseImage(child, DETAIL_IMAGE_RATIO);
+          if (image !== null) {
+            collector.next.detail.push(createImage(image));
+          }
         }
 
         return collector;

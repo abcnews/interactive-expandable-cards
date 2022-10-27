@@ -38,3 +38,5 @@ export const TITLE_SCROLL_MARGIN = 48;
 export const TERMINUS_KEY = '***REMOVED***';
 
 export const DEFAULT_IMAGE_RATIO = '3x2';
+
+export const DETAIL_IMAGE_RATIO = '16x9';
