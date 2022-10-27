@@ -1,57 +1,57 @@
 {
-  "name": "interactive-expandable-cards",
-  "version": "7.0.4",
-  "description": "Groups of expandable \"winners and losers\"-style cards that can be embedded in stories.",
-  "license": "MIT",
-  "private": true,
-  "contributors": [
-    "Colin Gourlay <gourlay.colin@abc.net.au>",
-    "Ash Kyd <kyd.ashley@abc.net.au>",
-    "Simon Elvery <elvery.simon@abc.net.au>",
-    "Andrew Kesper <kesper.andrew@abc.net.au>"
-  ],
-  "aunty": {
-    "type": "preact",
-    "build": {
-      "addModernJS": true
-    },
-    "serve": {
-      "hot": false
-    }
-  },
-  "size-limit": [
-    {
-      "limit": "30 KB",
-      "path": ".aunty/build/index.js"
-    }
-  ],
-  "scripts": {
-    "start": "aunty serve",
-    "test": "aunty test",
-    "build": "aunty build",
-    "size": "npm run build && size-limit"
-  },
-  "devDependencies": {
-    "@abcnews/aunty": "^13.0.3",
-    "@size-limit/file": "^4.10.1",
-    "@types/jest": "^26.0.20",
-    "@types/webpack-env": "^1.16.0",
-    "html-looks-like": "^1.0.3",
-    "preact-render-to-string": "^5.1.12",
-    "size-limit": "^4.10.1"
-  },
-  "dependencies": {
-    "@abcnews/alternating-case-to-object": "^3.0.1",
-    "@abcnews/env-utils": "^3.0.0",
-    "@abcnews/mount-utils": "^2.0.0",
-    "@abcnews/terminus-fetch": "^4.0.0",
-    "@abcnews/url2cmid": "^1.1.0",
-    "classnames": "^2.2.6",
-    "core-js": "^3.9.1",
-    "nanoid": "^3.1.20",
-    "preact": "^10.5.12",
-    "regenerator-runtime": "^0.13.7",
-    "util-dewysiwyg": "git+ssh://git@stash.abc-dev.net.au:7999/news/util-dewysiwyg.git#3.8.0",
-    "util-news-selectors": "git+ssh://git@stash.abc-dev.net.au:7999/news/util-news-selectors.git#2.0.2"
-  }
+	"name": "interactive-expandable-cards",
+	"version": "7.1.0",
+	"description": "Groups of expandable \"winners and losers\"-style cards that can be embedded in stories.",
+	"license": "MIT",
+	"private": true,
+	"contributors": [
+		"Colin Gourlay <gourlay.colin@abc.net.au>",
+		"Ash Kyd <kyd.ashley@abc.net.au>",
+		"Simon Elvery <elvery.simon@abc.net.au>",
+		"Andrew Kesper <kesper.andrew@abc.net.au>"
+	],
+	"aunty": {
+		"type": "preact",
+		"build": {
+			"addModernJS": true
+		},
+		"serve": {
+			"hot": false
+		}
+	},
+	"size-limit": [
+		{
+			"limit": "30 KB",
+			"path": ".aunty/build/index.js"
+		}
+	],
+	"scripts": {
+		"start": "aunty serve",
+		"test": "aunty test",
+		"build": "aunty build",
+		"size": "npm run build && size-limit"
+	},
+	"devDependencies": {
+		"@abcnews/aunty": "^13.0.3",
+		"@size-limit/file": "^4.10.1",
+		"@types/jest": "^26.0.20",
+		"@types/webpack-env": "^1.16.0",
+		"html-looks-like": "^1.0.3",
+		"preact-render-to-string": "^5.1.12",
+		"size-limit": "^4.10.1"
+	},
+	"dependencies": {
+		"@abcnews/alternating-case-to-object": "^3.0.1",
+		"@abcnews/env-utils": "^3.0.0",
+		"@abcnews/mount-utils": "^2.0.0",
+		"@abcnews/terminus-fetch": "^4.0.0",
+		"@abcnews/url2cmid": "^1.1.0",
+		"classnames": "^2.2.6",
+		"core-js": "^3.9.1",
+		"nanoid": "^3.1.20",
+		"preact": "^10.5.12",
+		"regenerator-runtime": "^0.13.7",
+		"util-dewysiwyg": "git+ssh://git@stash.abc-dev.net.au:7999/news/util-dewysiwyg.git#3.8.0",
+		"util-news-selectors": "git+ssh://git@stash.abc-dev.net.au:7999/news/util-news-selectors.git#2.0.2"
+	}
 }
