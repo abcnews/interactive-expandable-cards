@@ -1,5 +1,5 @@
 import 'regenerator-runtime';
-import { TERMINUS_KEY, NAMED_COLOURS, ACTO_PROP_MAP, ACTO_PROP_MAP_CARD, DEFAULT_IMAGE_RATIO } from './constants';
+import { NAMED_COLOURS, ACTO_PROP_MAP, ACTO_PROP_MAP_CARD, DEFAULT_IMAGE_RATIO } from './constants';
 import acto from '@abcnews/alternating-case-to-object';
 import { fetchOne, getImages } from '@abcnews/terminus-fetch';
 import { getTier, TIERS } from '@abcnews/env-utils';
@@ -114,7 +114,6 @@ export const isImage = (el: unknown): el is HTMLElement =>
 export const getEmbeddedImageData = async (id: string) => {
   const { _embedded } = await fetchOne({
     id,
-    apikey: TERMINUS_KEY,
     version: getTier() === TIERS.PREVIEW ? 'v1' : 'v2'
   });
   const media = _embedded?.mediaEmbedded || [];
