@@ -33,22 +33,22 @@
 	},
 	"devDependencies": {
 		"@abcnews/aunty": "^13.2.2",
-		"@size-limit/file": "^4.10.1",
-		"@types/jest": "^26.0.20",
+		"@size-limit/file": "^8.1.2",
+		"@types/jest": "^29.4.0",
 		"@types/webpack-env": "^1.16.0",
-		"html-looks-like": "^1.0.3",
 		"preact-render-to-string": "^5.1.12",
-		"size-limit": "^4.10.1"
+		"size-limit": "^8.1.2"
 	},
 	"dependencies": {
 		"@abcnews/alternating-case-to-object": "^3.0.1",
+		"@abcnews/dev-proxy": "^1.1.0",
 		"@abcnews/env-utils": "^3.0.0",
 		"@abcnews/mount-utils": "^2.0.0",
 		"@abcnews/terminus-fetch": "^5.0.0",
 		"@abcnews/url2cmid": "^1.1.0",
 		"classnames": "^2.2.6",
 		"core-js": "^3.9.1",
-		"nanoid": "^3.1.20",
+		"nanoid": "^4.0.1",
 		"preact": "^10.5.12",
 		"regenerator-runtime": "^0.13.7",
 		"util-dewysiwyg": "git+ssh://git@stash.abc-dev.net.au:7999/news/util-dewysiwyg.git#3.8.0",

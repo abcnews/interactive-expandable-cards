@@ -11,13 +11,13 @@ type DetailProps = {
 const TABBABLE_SELECTOR = '[href], button, input:not([type="hidden"]), select, textarea, [tabindex]';
 
 export const Detail: FunctionalComponent<DetailProps> = ({ open, nodes }) => {
-  const contentRef = useRef<HTMLDivElement>();
-  const baseRef = useRef<HTMLDivElement>();
+  const contentRef = useRef<HTMLDivElement>(null);
+  const baseRef = useRef<HTMLDivElement>(null);
   const [tabbable, setTabbable] = useState<{ el: Element; initial: string | null }[]>([]);
   const timeoutRef = useRef<number>();
 
   const animateHeightChange = (el: HTMLElement) => {
-    el.style.height = `${contentRef.current.clientHeight}px`;
+    el.style.height = `${contentRef.current?.clientHeight || 0}px`;
     window.clearTimeout(timeoutRef.current);
     timeoutRef.current = window.setTimeout(
       () => {
@@ -49,18 +49,18 @@ export const Detail: FunctionalComponent<DetailProps> = ({ open, nodes }) => {
 
   useEffect(() => {
     nodes.forEach(node => {
-      contentRef.current.appendChild(node);
+      contentRef.current?.appendChild(node);
     });
 
     setTabbable(
-      Array.from(contentRef.current.querySelectorAll(TABBABLE_SELECTOR)).map(el => ({
+      Array.from(contentRef.current?.querySelectorAll(TABBABLE_SELECTOR) || []).map(el => ({
         el,
         initial: el.getAttribute('tabindex')
       }))
     );
 
     return () => {
-      while (contentRef.current.firstChild) {
+      while (contentRef.current?.firstChild) {
         contentRef.current.firstChild.remove();
       }
       setTabbable([]);

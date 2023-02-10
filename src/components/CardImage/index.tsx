@@ -1,10 +1,11 @@
 import { h, FunctionalComponent } from 'preact';
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import styles from './styles.scss';
-import { nanoid } from 'nanoid';
 import GammaFilter from '../GammaFilter';
 import { RGB, rgbGamma } from '../../lib/utils';
 import { ExpandableCardsImage } from '../ExpandableCards';
+
+let idCounter = 0;
 
 type CardImageProps = {
   image: ExpandableCardsImage;
@@ -13,7 +14,7 @@ type CardImageProps = {
 
 const CardImage: FunctionalComponent<CardImageProps> = ({ image, tint }) => {
   const [srcSet, setSrcSet] = useState<string[]>([]);
-  const id = useMemo<string>(nanoid, []);
+  const id = useMemo<string>(() => '' + idCounter++, []);
 
   const filterId = `ExpandableCards__Filter_${id}`;
   const filterCSS = tint ? `grayscale(100%) url(#${filterId})` : undefined;

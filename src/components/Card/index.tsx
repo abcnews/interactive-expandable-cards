@@ -43,16 +43,18 @@ const Card: FunctionalComponent<CardProps> = ({
   const regionId = `ExpandableCards_${instance}__Region_${index}`;
   const order = 1 + (index % itemsPerRow) + Math.floor(index / itemsPerRow) * itemsPerRow * 2;
 
-  const toggleRef = useRef<HTMLDivElement>();
+  const toggleRef = useRef<HTMLDivElement>(null);
 
   // Scroll newly opened cards into view.
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => {
-        const { top, bottom } = toggleRef.current.getBoundingClientRect();
+        const rect = toggleRef.current?.getBoundingClientRect();
+        if (!rect) return;
+        const { top, bottom } = rect;
         const windowHeight = window.innerHeight;
         if (top < TITLE_SCROLL_MARGIN || bottom > windowHeight - TITLE_SCROLL_MARGIN) {
-          toggleRef.current.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'end' });
+          toggleRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'end' });
         }
       }, 250);
     }

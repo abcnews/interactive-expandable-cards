@@ -52,7 +52,7 @@ export const ExpandableCards: FunctionalComponent<ExpandableCardsProps> = ({
   defaultShouldTintPhoto,
   availableColours
 }) => {
-  const baseRef = useRef<HTMLDListElement>();
+  const baseRef = useRef<HTMLDListElement>(null);
   const [measurementIntervalId, setMeasurementIntervalId] = useState<number | undefined>(undefined);
   const [instanceId] = useState<number>(nextInstanceId++);
   const [itemsPerRow, setItemsPerRow] = useState<number>(2);
@@ -61,16 +61,16 @@ export const ExpandableCards: FunctionalComponent<ExpandableCardsProps> = ({
 
   // TODO: this should be observed in a way that doesn't involve intervals.
   const measureBase = () => {
-    const width = baseRef.current.offsetWidth;
-    if (width >= 1480) {
+    const width = baseRef.current?.offsetWidth;
+    if (width && width >= 1480) {
       setItemsPerRow(6);
-    } else if (width >= 1200) {
+    } else if (width && width >= 1200) {
       setItemsPerRow(5);
-    } else if (width >= 940) {
+    } else if (width && width >= 940) {
       setItemsPerRow(4);
-    } else if (width >= 480) {
+    } else if (width && width >= 480) {
       setItemsPerRow(3);
-    } else if (width >= 240) {
+    } else if (width && width >= 240) {
       setItemsPerRow(2);
     } else {
       setItemsPerRow(1);
@@ -89,7 +89,7 @@ export const ExpandableCards: FunctionalComponent<ExpandableCardsProps> = ({
   useLayoutEffect(() => {
     // Integrate with Odyssey
     const integrateWithOdyssey = () => {
-      if (baseRef.current.parentElement) {
+      if (baseRef.current?.parentElement) {
         baseRef.current.parentElement.classList.remove('u-richtext');
         baseRef.current.parentElement.classList.add('u-pull');
       }
@@ -101,7 +101,7 @@ export const ExpandableCards: FunctionalComponent<ExpandableCardsProps> = ({
     }
 
     // Integrate with phase 1 mobile
-    if (baseRef.current.parentElement && baseRef.current.parentElement.className.indexOf('embed-wysiwyg') > -1) {
+    if (baseRef.current?.parentElement && baseRef.current.parentElement.className.indexOf('embed-wysiwyg') > -1) {
       baseRef.current.parentElement.classList.add(styles.borderless);
     }
   });
@@ -129,7 +129,7 @@ export const ExpandableCards: FunctionalComponent<ExpandableCardsProps> = ({
 
     if (nextIndex > -1 && nextIndex < items.length) {
       event.preventDefault();
-      Array.from(baseRef.current.querySelectorAll('[data-component="Control"]')).forEach((el, index) => {
+      Array.from(baseRef.current?.querySelectorAll('[data-component="Control"]') || []).forEach((el, index) => {
         if (index === nextIndex) {
           if (el instanceof HTMLElement) el.focus();
         }
