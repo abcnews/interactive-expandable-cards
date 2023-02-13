@@ -12,14 +12,8 @@ const GammaFilter: FunctionalComponent<GammaFilterProps> = ({ id, exponents: { r
       <defs></defs>
       <filter id={id} color-interpolation-filters="sRGB" x="0" y="0" height="100%" width="100%">
         <feComponentTransfer>
-          {/*
-                       // @ts-ignore */}
           <feFuncR type="gamma" exponent={r} />
-          {/*
-                       // @ts-ignore */}
           <feFuncG type="gamma" exponent={g} />
-          {/*
-                       // @ts-ignore */}
           <feFuncB type="gamma" exponent={b} />
         </feComponentTransfer>
       </filter>
