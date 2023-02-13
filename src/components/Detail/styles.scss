@@ -2,8 +2,6 @@
   overflow: hidden;
   margin: 0 0.625rem;
   font-family: ABCSans, Helvetica, Arial, sans-serif;
-  color: #000;
-  background-color: #ffffff;
 
   @media (min-width: 40rem) {
     opacity: 0;
@@ -13,7 +11,6 @@
     margin-left: 0;
     margin-right: 0;
     margin-bottom: -1.5rem;
-    background-color: #ffffff;
     transition: opacity 0.25s cubic-bezier(0.645, 0.045, 0.355, 1), transform 0.25s cubic-bezier(0.645, 0.045, 0.355, 1),
       height 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
 
