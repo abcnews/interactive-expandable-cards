@@ -54,3 +54,5 @@ Implementation is based on W3C's [WAI-ARIA Accordion Example](https://www.w3.org
 The current version of this component has Presentation Layer article pages on the ABC News website as a primary target.
 
 It is backwards compatible in the sense that older articles rendered by legacy Phase 1 and Phase 2 templates should still render as expected. However there are a number of differences in usage and configuration options for older legacy usage that aren't documented here.
+
+(don't mind me; I'm just here so we can test our PR CI workflow 😅)
