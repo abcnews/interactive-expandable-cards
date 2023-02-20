@@ -42,7 +42,7 @@
 
 :global(.supports-user-dark-mode) .root {
   @media screen and (prefers-color-scheme: dark) {
-    --expandable-cards-background-color: #333;
+    --expandable-cards-background-color: #1E2124;
     --expandable-cards-color: #fff;
     --expandable-cards-border-color: #555;  ///todo probably delete
     --expandable-cards-card-shadow: 0px 0px 1px 1px rgba(200, 200, 200, 0.4);
