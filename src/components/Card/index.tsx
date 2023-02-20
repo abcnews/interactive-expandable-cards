@@ -91,7 +91,11 @@ const Card: FunctionalComponent<CardProps> = ({
           ) : null}
           {image && <CardImage image={image} tint={shouldTintPhoto && cardColourRGB} />}
           <div class={styles.title}>{titleChildren}</div>
-          <div ref={toggleRef} class={styles.toggle} role="presentation" />
+          <div ref={toggleRef} class={styles.toggle} role="presentation">
+            <svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+              <path d="m20 8-8 8-8-8" stroke="currentColor" stroke-width="2" />
+            </svg>
+          </div>
         </button>
       </dt>
       <dd
