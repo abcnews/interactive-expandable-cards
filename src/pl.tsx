@@ -24,12 +24,11 @@ const DECOY_KEY = 'cards';
 let embeddedImageDataPromise: Promise<TerminusImageData>;
 
 const parseImage = async (el: HTMLElement, defaultImageRatio: string) => {
-  const uri = el.dataset.uri;
-  const id = uri && uri.substr(uri.lastIndexOf('/') + 1);
   const img = el.querySelector('img');
+  const caption = el.querySelector('figcaption');
+  const id = caption?.getAttribute('id');
   const alt = img?.getAttribute('alt');
   const url = img?.dataset.src || img?.getAttribute('src');
-
   if (typeof id === 'undefined' || typeof alt !== 'string' || typeof url !== 'string') {
     return null;
   }
