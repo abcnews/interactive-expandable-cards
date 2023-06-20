@@ -29,7 +29,7 @@ const parseImage = async (el: HTMLElement, defaultImageRatio: string) => {
   const id = caption?.getAttribute('id');
   const alt = img?.getAttribute('alt');
   const url = img?.dataset.src || img?.getAttribute('src');
-  if (typeof id === 'undefined' || typeof alt !== 'string' || typeof url !== 'string') {
+  if (typeof id === 'undefined' || id === null || typeof alt !== 'string' || typeof url !== 'string') {
     return null;
   }
 
