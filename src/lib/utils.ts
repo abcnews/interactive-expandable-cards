@@ -106,8 +106,7 @@ export const parseTitle = (text: string): { title: string; label: string | null 
   return { title, label };
 };
 
-// Image functions are only relevant to the PL implementation
-export const isImage = (el: unknown): el is HTMLElement =>
+export const containsImageElement = (el: unknown): el is HTMLElement =>
   typeof el !== 'undefined' && el instanceof HTMLElement && el.querySelectorAll('img').length > 0;
 
 export const getEmbeddedImageData = async (id: string) => {

@@ -7,7 +7,7 @@ import {
   ExpandableCardsImage,
   ExpandableCardsItem
 } from './components/ExpandableCards';
-import { getConfig, getEmbeddedImageData, getItemConfig, isImage, isTitle, parseTitle } from './lib/utils';
+import { getConfig, getEmbeddedImageData, getItemConfig, containsImageElement, isTitle, parseTitle } from './lib/utils';
 import type { TerminusImageData } from './lib/utils';
 import { requestDOMPermit } from '@abcnews/env-utils';
 import url2cmid from '@abcnews/url2cmid';
@@ -26,9 +26,11 @@ let embeddedImageDataPromise: Promise<TerminusImageData>;
 const parseImage = async (el: HTMLElement, defaultImageRatio: string) => {
   const img = el.querySelector('img');
   const caption = el.querySelector('figcaption');
-  const id = caption?.getAttribute('id');
+  const uri = el.dataset.uri;
+  const id = uri ? uri.substring(uri.lastIndexOf('/') + 1) : caption?.getAttribute('id');
   const alt = img?.getAttribute('alt');
   const url = img?.dataset.src || img?.getAttribute('src');
+
   if (typeof id === 'undefined' || id === null || typeof alt !== 'string' || typeof url !== 'string') {
     return null;
   }
@@ -47,7 +49,6 @@ const parseImage = async (el: HTMLElement, defaultImageRatio: string) => {
 
   while (image.renditions.length === 0) {
     const ratio = ratios.shift();
-
     image.renditions = availableRenditions.filter(d => d.ratio === ratio);
   }
 
@@ -71,7 +72,7 @@ const parseDOM = async (el: HTMLElement, availableColours: ExpandableCardsColour
       }
 
       // If this is an image (and we're already collecting)
-      if (collector.next && isImage(child)) {
+      if (collector.next && containsImageElement(child)) {
         // If there isn't already an image on this card
         if (!collector.next.image) {
           const image = await parseImage(child, defaultImageRatio);
@@ -79,7 +80,7 @@ const parseDOM = async (el: HTMLElement, availableColours: ExpandableCardsColour
             collector.next.image = image;
           }
         } else {
-          // Otherwise, this defines image content, so push one into the details.
+          // Otherwise, there is already a card image, so put this in the content.
           const image = await parseImage(child, DETAIL_IMAGE_RATIO);
           if (image !== null) {
             collector.next.detail.push(createImage(image));

@@ -1,4 +1,4 @@
-import { isImage, isTitle, parseTitle } from './utils';
+import { containsImageElement, isTitle, parseTitle } from './utils';
 
 describe('isTitle', () => {
   const incorrectElement = document.createElement('h3');
@@ -51,12 +51,12 @@ describe('isImage', () => {
 
   test('should fail for an empty figure', () => {
     const figure = getFigure({ id: '123' });
-    expect(isImage(figure)).toBe(false);
+    expect(containsImageElement(figure)).toBe(false);
   });
 
   test('should pass for a figure elements with and ID', () => {
     const figure = addImage(getFigure({ id: '123' }), { src: 'yes' });
-    expect(isImage(figure)).toBe(true);
+    expect(containsImageElement(figure)).toBe(true);
   });
 });
 
