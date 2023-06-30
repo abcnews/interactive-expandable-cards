@@ -67,7 +67,7 @@ const Card: FunctionalComponent<CardProps> = ({
 
   return (
     <Fragment>
-      <dt role="heading" aria-level="3" className={styles[`of${itemsPerRow}`]} style={{ order: order }}>
+      <dt role="heading" aria-level={3} className={styles[`of${itemsPerRow}`]} style={{ order: order }}>
         <button
           id={controlId}
           aria-controls={regionId}
