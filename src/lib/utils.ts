@@ -2,7 +2,6 @@ import 'regenerator-runtime';
 import { NAMED_COLOURS, ACTO_PROP_MAP, ACTO_PROP_MAP_CARD, DEFAULT_IMAGE_RATIO } from './constants';
 import acto from '@abcnews/alternating-case-to-object';
 import { fetchOne, getImages } from '@abcnews/terminus-fetch';
-import { getTier, TIERS } from '@abcnews/env-utils';
 
 import {
   ExpandableCardsColourMap,
@@ -112,10 +111,7 @@ export const isImage = (el: unknown): el is HTMLElement =>
   typeof el !== 'undefined' && el instanceof HTMLElement && el.querySelectorAll('img').length > 0;
 
 export const getEmbeddedImageData = async (id: string) => {
-  const { _embedded } = await fetchOne({
-    id,
-    version: getTier() === TIERS.PREVIEW ? 'v1' : 'v2'
-  });
+  const { _embedded } = await fetchOne({ id });
   const media = _embedded?.mediaEmbedded || [];
 
   return media.reduce<TerminusImageData>((images, embed: any) => {
