@@ -25,6 +25,7 @@ export type ExpandableCardsImageRendition = {
 export type ExpandableCardsImage = {
   alt: string;
   url: string;
+  defaultRatio?: string;
   renditions: ExpandableCardsImageRendition[];
 };
 

@@ -23,7 +23,7 @@ const DECOY_KEY = 'cards';
 
 let embeddedImageDataPromise: Promise<TerminusImageData>;
 
-const parseImage = async (el: HTMLElement, defaultImageRatio: string) => {
+const parseImage = async (el: HTMLElement, defaultImageRatio: string | undefined) => {
   const img = el.querySelector('img');
   const caption = el.querySelector('figcaption');
   const uri = el.dataset.uri;
@@ -45,7 +45,12 @@ const parseImage = async (el: HTMLElement, defaultImageRatio: string) => {
   }
 
   // Try to find the requested ratio
-  const ratios = [defaultImageRatio, DEFAULT_IMAGE_RATIO, availableRenditions[0].ratio];
+  const ratios = [
+    defaultImageRatio,
+    embeddedImageData[id].defaultRatio,
+    DEFAULT_IMAGE_RATIO,
+    availableRenditions[0].ratio
+  ];
 
   while (image.renditions.length === 0) {
     const ratio = ratios.shift();
@@ -53,6 +58,15 @@ const parseImage = async (el: HTMLElement, defaultImageRatio: string) => {
   }
 
   return image;
+};
+
+const fixFig = (el: HTMLElement, image: ExpandableCardsImage) => {
+  const img = el.querySelector('img');
+  if (img) {
+    img.setAttribute('src', image.renditions[0].url);
+    img.setAttribute('srcset', image.renditions.map(d => `${d.url} ${d.width}w`).join(','));
+  }
+  return el;
 };
 
 const parseDOM = async (el: HTMLElement, availableColours: ExpandableCardsColourMap, defaultImageRatio: string) => {
@@ -81,9 +95,9 @@ const parseDOM = async (el: HTMLElement, availableColours: ExpandableCardsColour
           }
         } else {
           // Otherwise, there is already a card image, so put this in the content.
-          const image = await parseImage(child, DETAIL_IMAGE_RATIO);
+          const image = await parseImage(child, undefined);
           if (image !== null) {
-            collector.next.detail.push(createImage(image));
+            collector.next.detail.push(fixFig(child, image));
           }
         }
 

@@ -110,7 +110,9 @@ export const containsImageElement = (el: unknown): el is HTMLElement =>
   typeof el !== 'undefined' && el instanceof HTMLElement && el.querySelectorAll('img').length > 0;
 
 export const getEmbeddedImageData = async (id: string) => {
-  const { _embedded } = await fetchOne({ id });
+  const article = await fetchOne({ id });
+
+  const { _embedded } = article;
   const media = _embedded?.mediaEmbedded || [];
 
   return media.reduce<TerminusImageData>((images, embed: any) => {
@@ -119,7 +121,8 @@ export const getEmbeddedImageData = async (id: string) => {
       const imageData = getImages(embed, widths);
       const alt = imageData.alt || imageData.title || '';
       const id = imageData.cmid;
-      images[id] = { alt, url: '', renditions: imageData.renditions };
+
+      images[id] = { alt, url: '', renditions: imageData.renditions, defaultRatio: imageData.defaultRatio };
       return images;
     } catch (e) {
       // this ignores embeds which aren't images (which will throw an error when passed to getImages)

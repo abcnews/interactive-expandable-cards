@@ -44,7 +44,7 @@
 		"@abcnews/dev-proxy": "^1.1.0",
 		"@abcnews/env-utils": "^3.0.0",
 		"@abcnews/mount-utils": "^2.0.0",
-		"@abcnews/terminus-fetch": "^5.0.0",
+		"@abcnews/terminus-fetch": "^6.0.0",
 		"@abcnews/url2cmid": "^1.1.0",
 		"classnames": "^2.2.6",
 		"core-js": "^3.9.1",
