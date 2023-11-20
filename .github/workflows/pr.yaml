@@ -3,7 +3,7 @@ name: Test and build PR
 on: [pull_request, workflow_dispatch]
 
 env:
-  TERMINUS_FETCH_API_KEY: "placeholder"
+  TERMINUS_FETCH_API_KEY: 'placeholder'
 
 jobs:
   build:
@@ -11,7 +11,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node: ['18.x']
+        node: ['18.x', '20.x']
         os: [windows-latest, macOS-latest]
 
     steps:

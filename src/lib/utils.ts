@@ -1,4 +1,3 @@
-import 'regenerator-runtime';
 import { NAMED_COLOURS, ACTO_PROP_MAP, ACTO_PROP_MAP_CARD, DEFAULT_IMAGE_RATIO } from './constants';
 import acto from '@abcnews/alternating-case-to-object';
 import { fetchOne, getImages } from '@abcnews/terminus-fetch';

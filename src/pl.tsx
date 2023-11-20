@@ -1,6 +1,4 @@
-import 'regenerator-runtime';
 import { h, render } from 'preact';
-import { createImage } from './components/Detail/utils';
 import {
   ExpandableCards,
   ExpandableCardsColourMap,
@@ -12,7 +10,7 @@ import type { TerminusImageData } from './lib/utils';
 import { requestDOMPermit } from '@abcnews/env-utils';
 import url2cmid from '@abcnews/url2cmid';
 import { getMountValue, isMount } from '@abcnews/mount-utils';
-import { DEFAULT_IMAGE_RATIO, DETAIL_IMAGE_RATIO } from './lib/constants';
+import { DEFAULT_IMAGE_RATIO } from './lib/constants';
 
 type ExpandableCardsItemCollector = {
   cards: ExpandableCardsItem[];
