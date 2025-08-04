@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { FunctionalComponent, h } from 'preact';
+import { type FunctionalComponent, h } from 'preact';
 import { useRef, useState, useEffect, useLayoutEffect } from 'preact/hooks';
 import styles from './styles.scss';
 

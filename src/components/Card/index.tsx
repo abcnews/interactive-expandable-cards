@@ -1,4 +1,4 @@
-import { h, FunctionalComponent, Fragment } from 'preact';
+import { h, type FunctionalComponent, Fragment } from 'preact';
 import classNames from 'classnames';
 import { Detail } from '../Detail';
 import styles from './styles.scss';
@@ -6,7 +6,7 @@ import { blackOrWhiteText, hexToRGB, slug } from '../../lib/utils';
 import { useEffect, useRef } from 'preact/hooks';
 import { TITLE_SCROLL_MARGIN } from '../../lib/constants';
 import CardImage from '../CardImage';
-import { ExpandableCardsImage } from '../ExpandableCards';
+import { type ExpandableCardsImage } from '../ExpandableCards';
 
 type CardProps = {
   instance: number;
