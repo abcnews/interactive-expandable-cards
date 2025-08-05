@@ -1,9 +1,9 @@
-import { h, FunctionalComponent } from 'preact';
+import { h, type FunctionalComponent } from 'preact';
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import styles from './styles.scss';
 import GammaFilter from '../GammaFilter';
-import { RGB, rgbGamma } from '../../lib/utils';
-import { ExpandableCardsImage } from '../ExpandableCards';
+import { type RGB, rgbGamma } from '../../lib/utils';
+import { type ExpandableCardsImage } from '../ExpandableCards';
 
 let idCounter = 0;
 

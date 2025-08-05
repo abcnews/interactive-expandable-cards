@@ -1,4 +1,4 @@
-import { h, FunctionalComponent } from 'preact';
+import { h, type FunctionalComponent } from 'preact';
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { getColourFromLabel } from '../../lib/utils';
 import Card from '../Card';

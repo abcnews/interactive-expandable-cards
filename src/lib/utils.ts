@@ -3,10 +3,10 @@ import acto from '@abcnews/alternating-case-to-object';
 import { fetchOne, getImages } from '@abcnews/terminus-fetch';
 
 import {
-  ExpandableCardsColourMap,
-  ExpandableCardsConfig,
-  ExpandableCardsItemConfig,
-  ExpandableCardsImage
+  type ExpandableCardsColourMap,
+  type ExpandableCardsConfig,
+  type ExpandableCardsItemConfig,
+  type ExpandableCardsImage
 } from '../components/ExpandableCards';
 
 export type TerminusImageData = {

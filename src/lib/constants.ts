@@ -1,4 +1,4 @@
-import { ExpandableCardsColourMap } from '../components/ExpandableCards';
+import { type ExpandableCardsColourMap } from '../components/ExpandableCards';
 
 type ColourName = keyof typeof NAMED_COLOURS;
 

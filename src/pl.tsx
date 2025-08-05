@@ -1,9 +1,9 @@
 import { h, render } from 'preact';
 import {
   ExpandableCards,
-  ExpandableCardsColourMap,
-  ExpandableCardsImage,
-  ExpandableCardsItem
+  type ExpandableCardsColourMap,
+  type ExpandableCardsImage,
+  type ExpandableCardsItem
 } from './components/ExpandableCards';
 import { getConfig, getEmbeddedImageData, getItemConfig, containsImageElement, isTitle, parseTitle } from './lib/utils';
 import type { TerminusImageData } from './lib/utils';

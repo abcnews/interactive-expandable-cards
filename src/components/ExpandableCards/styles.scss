@@ -9,7 +9,8 @@
   --expandable-cards-card-shadow: 0.1rem 0.1rem 1.5rem rgba(0, 0, 0, 0.3);
   --expandable-cards-card-shadow-active: 0.1rem 0.1rem 1.5rem rgba(0, 0, 0, 0.3), 0 0 0.75rem rgba(0, 0, 0, 0.6);
   --expandable-cards-tab-shadow: 0 0.125rem 0.1875rem rgba(0, 0, 0, 0.12), 0 0.125rem 0.125rem rgba(0, 0, 0, 0.24);
-  --expandable-cards-tab-shadow-active: 0 0.6875rem 1.25rem rgba(0, 0, 0, 0.19), 0 0.4375rem 0.375rem rgba(0, 0, 0, 0.23);
+  --expandable-cards-tab-shadow-active: 0 0.6875rem 1.25rem rgba(0, 0, 0, 0.19),
+    0 0.4375rem 0.375rem rgba(0, 0, 0, 0.23);
 
   display: flex;
   flex-wrap: wrap;
@@ -42,12 +43,15 @@
 
 :global(.supports-user-dark-mode) .root {
   @media screen and (prefers-color-scheme: dark) {
-    --expandable-cards-background-color: #1E2124;
+    --expandable-cards-background-color: #1e2124;
     --expandable-cards-color: #fff;
-    --expandable-cards-border-color: #555;  ///todo probably delete
+    --expandable-cards-border-color: #555; ///todo probably delete
     --expandable-cards-card-shadow: 0px 0px 1px 1px rgba(200, 200, 200, 0.4);
-    --expandable-cards-card-shadow-active: 0px 0px 1px 1px rgba(200, 200, 200, 0.4), 0 0 6px 1px rgba(200,200,200, 0.6);
-    --expandable-cards-tab-shadow: 0 0.125rem 0.1875rem rgba(140, 140, 140, 0.12), 0 0.125rem 0.125rem rgba(140, 140, 140, 0.24);
-    --expandable-cards-tab-shadow-active: 0 0.6875rem 1.25rem rgba(140, 140, 140, 0.19), 0 0.4375rem 0.375rem rgba(140, 140, 140, 0.23);
+    --expandable-cards-card-shadow-active: 0px 0px 1px 1px rgba(200, 200, 200, 0.4),
+      0 0 6px 1px rgba(200, 200, 200, 0.6);
+    --expandable-cards-tab-shadow: 0 0.125rem 0.1875rem rgba(140, 140, 140, 0.12),
+      0 0.125rem 0.125rem rgba(140, 140, 140, 0.24);
+    --expandable-cards-tab-shadow-active: 0 0.6875rem 1.25rem rgba(140, 140, 140, 0.19),
+      0 0.4375rem 0.375rem rgba(140, 140, 140, 0.23);
   }
 }

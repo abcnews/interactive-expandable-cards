@@ -1,4 +1,4 @@
-import { h, FunctionalComponent } from 'preact';
+import { h, type FunctionalComponent } from 'preact';
 import styles from './styles.scss';
 
 type GammaFilterProps = {
